@@ -1,0 +1,15 @@
+{
+  "short_name": "SAEB SAC DOS",
+  "name": "SAEB SAC DOS Dashboard",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#3182ce",
+  "background_color": "#f5f5ef",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}

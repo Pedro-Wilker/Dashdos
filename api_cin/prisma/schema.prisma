@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Cargo {
+  ADMIN
+  DIRETORIA
+  SAC
+  CARTA
+  ARTICULACAO
+  NGA
+  PONTOS
+  CAPITAL
+  INTERIOR
+  NUD
+  MOVEL
+  CIN
+}
+
+enum StatusVisita {
+  Aprovado
+  Reprovado
+}
+
+enum StatusPublicacao {
+  publicado
+  aguardando_publicacao
+}
+
+enum StatusInstalacao {
+  instalado
+  aguardando_instalacao
+}
+
+model User {
+  id           Int    @id @default(autoincrement())
+  email        String @unique
+  name         String
+  cargo        Cargo
+  passwordHash String
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model cin_amplo_geral {
+  id                 Int              @id @default(autoincrement())
+  nome_municipio     String           @unique
+  status_infra       String
+  cidade_visita      Boolean
+  periodo_visita     DateTime?
+  periodo_instalacao DateTime?
+  data_visita        DateTime?
+  data_instalacao    DateTime?
+  status_visita      StatusVisita
+  status_publicacao  StatusPublicacao
+  status_instalacao  StatusInstalacao
+  publicacao         DateTime
+
+  createAt               DateTime                   @default(now())
+  updateAt               DateTime                   @updatedAt
+  produtividades_diarias produtividade_diaria_cin[] @relation("MunicipioRelation")
+}
+
+model produtividade_diaria_cin {
+  id                 Int      @id @default(autoincrement())
+  cin_amplo_geral_id Int
+  data               DateTime
+  quantidade         Int
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  cin_amplo_geral cin_amplo_geral @relation("MunicipioRelation", fields: [cin_amplo_geral_id], references: [id])
+
+  @@unique([cin_amplo_geral_id, data])
+  @@index([data])
+}

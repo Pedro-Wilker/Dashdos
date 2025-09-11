@@ -1,0 +1,5 @@
+{
+  "transpile-only": true,
+  "ignore": ["node_modules", "dist"],
+  "watch": ["src"]
+}
