@@ -31,7 +31,6 @@ const MotionModalContent = motion(ModalContent);
 const CityListModal = ({ isOpen, onClose, cities, title }) => {
   const textColor = useColorModeValue('text._light', 'text._dark');
   const hoverBg = useColorModeValue('gray.100', 'gray.600');
-  const bgSurface = useColorModeValue('bg.surface._light', 'bg.surface._dark');
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCities, setFilteredCities] = useState(cities);
 
@@ -56,7 +55,7 @@ const CityListModal = ({ isOpen, onClose, cities, title }) => {
         cardCities = (await getStatusPublicacaoBreakdown()).data.publishedCities;
       } else if (title === 'Instalados') {
         cardCities = (await getStatusInstalacaoBreakdown()).data.installedCities;
-      } else if (title === 'Aguardando Instalacao') {
+      } else if (title === 'AG. Instalação') { // Nome atualizado
         cardCities = (await getStatusInstalacaoBreakdown()).data.awaitingInstallationCities;
       }
 
@@ -96,7 +95,7 @@ const CityListModal = ({ isOpen, onClose, cities, title }) => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 50 }}
-        bg={bgSurface}
+        bg="bg.surface" // Corrigido para usar semantic token diretamente
         borderRadius="lg"
         boxShadow="lg"
         color={textColor}

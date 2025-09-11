@@ -37,7 +37,7 @@ const DashboardCard = ({ title, percentage, cities }) => {
       position="relative"
       zIndex={isOpen ? 10 : 1}
       color={textColor}
-      minW="150px" 
+      minW="150px"
     >
       <VStack spacing={2}>
         <Text fontWeight="bold" fontSize="md">{title}</Text>
@@ -59,6 +59,8 @@ const DashboardCard = ({ title, percentage, cities }) => {
           p={2}
           maxH="300px"
           overflowY="auto"
+          onClick={(e) => e.stopPropagation()} // Impede bubbling para não toggle/fecha o card
+          onDoubleClick={(e) => e.stopPropagation()} // Impede bubbling para double click
         >
           <CityList cities={cities} cardTitle={title} />
         </Box>

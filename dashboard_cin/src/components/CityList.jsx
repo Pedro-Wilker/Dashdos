@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Box, List, ListItem, Text, Button, useColorModeValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import CityListModal from './CityListModal';
+import CityDetailsModal from './CityDetailsModal'; // Novo componente adicionado
 
 const MotionBox = motion(Box);
 
 const CityList = ({ cities, cardTitle }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState(null);
   const visibleCities = cities?.slice(0, 10) || [];
   const textColor = useColorModeValue('text._light', 'text._dark');
   const hoverBg = useColorModeValue('gray.100', 'gray.600');
@@ -34,7 +36,9 @@ const CityList = ({ cities, cardTitle }) => {
               p={2}
               borderRadius="md"
               _hover={{ bg: hoverBg }}
-              aria-label={city.nome_municipio}
+              cursor="pointer"
+              onClick={() => setSelectedCity(city.nome_municipio)} // Abre modal de detalhes
+              aria-label={`Detalhes de ${city.nome_municipio}`}
             >
               <Text fontSize="sm">{city.nome_municipio}</Text>
             </ListItem>
@@ -60,6 +64,11 @@ const CityList = ({ cities, cardTitle }) => {
         onClose={() => setIsModalOpen(false)}
         cities={cities}
         title={`Lista de todas as cidades ${cardTitle}`}
+      />
+      <CityDetailsModal
+        isOpen={!!selectedCity}
+        onClose={() => setSelectedCity(null)}
+        cityName={selectedCity}
       />
     </>
   );

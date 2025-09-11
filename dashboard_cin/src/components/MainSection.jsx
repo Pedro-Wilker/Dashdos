@@ -20,6 +20,8 @@ import {
   VStack,
   Grid,
   GridItem,
+  List,
+  ListItem,
 } from '@chakra-ui/react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -33,12 +35,13 @@ import {
   Legend,
   LabelList,
 } from 'recharts';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import {
   getAmploGeral,
   getTopCities,
   getGeralMensal,
+  getCityDetails,
 } from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
 import BahiaMap from './BahiaMap';
@@ -76,6 +79,7 @@ const MainSection = () => {
 
   const topCitiesRef = useRef(null);
   const monthlyRef = useRef(null);
+  const [selectedCity, setSelectedCity] = useState(null); // Estado local para cidade selecionada
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['mainSectionData'],
@@ -239,14 +243,24 @@ const MainSection = () => {
     </VStack>
   );
 
-  const renderMap = () => (
-    <Box className="card-like" border="1px solid" borderColor={borderColor} borderRadius="lg" p={4} bg={bgSurface}>
-      <Heading size="lg" mb={4} fontWeight="extrabold" color={textFill}>
+const renderMap = () => (
+    <Box className="card-like" border="1px solid" borderColor={borderColor} borderRadius="lg" p={4} bg={bgSurface} height="80vh" position="relative">
+      <Heading size="md" mb={2} fontWeight="extrabold" color={textFill}> {/* size="md" e mb={2} para padding mínimo */}
         Mapa da Bahia
       </Heading>
-      <BahiaMap isInteractive={true} highlightedCities={visits.map(city => city.NOME).concat(installations.map(city => city.NOME))} />
+      {/* Container otimizado: subtrai só heading (~30px) + padding extra (~10px) */}
+      <Box height="calc(100% - 10px)" width="100%" position="relative">
+        <BahiaMap 
+          isInteractive={true} 
+          highlightedCities={visits.map(city => city.NOME).concat(installations.map(city => city.NOME))} 
+          selectedCity={selectedCity} 
+          setSelectedCity={setSelectedCity} 
+        />
+      </Box>
+      {selectedCity && <CityDetailsSection cityName={selectedCity} />}
     </Box>
   );
+
 
   const renderTopCities = () => {
     const sortedTopCities = topCities.slice().sort((a, b) => b.total_quantidade - a.total_quantidade);
@@ -418,6 +432,34 @@ const MainSection = () => {
           </GridItem>
         </Grid>
       </Box>
+    </Box>
+  );
+};
+
+const CityDetailsSection = ({ cityName }) => {
+  const { data: cityDetails, isLoading } = useQuery({
+    queryKey: ['cityDetails', cityName],
+    queryFn: () => getCityDetails(cityName),
+    enabled: !!cityName,
+  });
+
+  if (isLoading) return <Text>Carregando detalhes...</Text>;
+  if (!cityDetails || !cityDetails.data[0]) return <Text>Nenhum detalhe disponível para {cityName}.</Text>;
+
+  const details = cityDetails.data[0];
+
+  return (
+    <Box mt={4} p={4} bg="bg.surface" borderRadius="md" boxShadow="md">
+      <Heading size="md" mb={2}>Detalhes de {cityName}</Heading>
+      <List spacing={2}>
+        <ListItem><strong>Nome:</strong> {details.nome_municipio}</ListItem>
+        <ListItem><strong>Status Visita:</strong> {details.status_visita || 'N/A'}</ListItem>
+        <ListItem><strong>Status Publicação:</strong> {details.status_publicacao || 'N/A'}</ListItem>
+        <ListItem><strong>Status Instalação:</strong> {details.status_instalacao || 'N/A'}</ListItem>
+        <ListItem><strong>Data Visita:</strong> {details.data_visita || 'N/A'}</ListItem>
+        <ListItem><strong>Data Instalação:</strong> {details.data_instalacao || 'N/A'}</ListItem>
+        {/* Adicione mais campos conforme a resposta da API */}
+      </List>
     </Box>
   );
 };
