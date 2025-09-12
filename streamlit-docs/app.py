@@ -26,7 +26,7 @@ if page == "Introdução":
     
     ### API (api_cin):
     
-    A API é uma aplicação Node.js com Express e Sequelize (para PostgreSQL) que gerencia dados de municípios da Bahia, focando em visitas, instalações, publicações e produtividades de CINs (Contrato de Instrumento de Notificação?). Ela oferece endpoints para consultas gerais, breakdowns de status, rankings de cidades e detalhes por município. Desenvolvida com autenticação JWT (opcional), a API suporta operações CRUD para entidades como `AmploGeral` (municípios) e `ProdutividadeDiaria`.
+    A API é uma aplicação Node.js com Express e Sequelize (para PostgreSQL) que gerencia dados de municípios da Bahia, focando em visitas, instalações, publicações e produtividades de CINs (Carteira de Identidade Nacional). Ela oferece endpoints para consultas gerais, breakdowns de status, rankings de cidades e detalhes por município. Desenvolvida com autenticação JWT (opcional), a API suporta operações CRUD para entidades como `AmploGeral` (municípios) e `ProdutividadeDiaria`.
 
     ### Dashboard (dashboard_cin):
     
