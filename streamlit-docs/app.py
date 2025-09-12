@@ -716,7 +716,7 @@ elif page == "Dashboard Frontend":
         <Suspense fallback={<LoadingSpinner />}>
           <MainSection />
           <PieChartSection />
-          <HeatMapSection />  // Novo componente
+          <HeatMapSection /> 
         </Suspense>
       </Box>
     );
