@@ -1,0 +1,2368 @@
+type: collection.insomnia.rest/5.0
+name: My first collection
+meta:
+  id: wrk_402e8704cf6941e4ade430844d4f54aa
+  created: 1756223048942
+  modified: 1756223048942
+  description: ""
+collection:
+  - name: Users
+    meta:
+      id: fld_bfa423a9ffcc4017863ea91b6aa1c379
+      created: 1756223083055
+      modified: 1756311600261
+      sortKey: -1756223083056
+      description: ""
+    children:
+      - url: http://localhost:3000/api/users/register
+        name: register
+        meta:
+          id: req_87113f97b8394f2c9d0bd37a8c905ad7
+          created: 1756223089993
+          modified: 1756318346828
+          isPrivate: false
+          description: ""
+          sortKey: -1756223092132
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "email": "suporte@example.com",
+                "name": "Suporte",
+                "cargo": "ADMIN",
+                "password": "suporte123"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/users/login
+        name: login
+        meta:
+          id: req_825a8f59a5394c12803c6e9fce167952
+          created: 1756224394103
+          modified: 1756318361919
+          isPrivate: false
+          description: ""
+          sortKey: -1756223092082
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "email": "suporte@example.com",
+                "password": "suporte123"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/users/1
+        name: updateUser
+        meta:
+          id: req_d56a1a194f674eb3809fbbe084f18421
+          created: 1756224749571
+          modified: 1756224847529
+          isPrivate: false
+          description: ""
+          sortKey: -1756223092032
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            
+            {
+              "email": "pedrowilker1516@gmail.com",
+              "name": "Pedro Wilker Oliveira Queiroz"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzU2MjI0NDExLCJleHAiOjE3NTYyMjgwMTF9.VMtqD8VFa9TLNZjg7p7HWBCsRmz95G7OyIsGwmvQ7NU
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/users/1/password
+        name: updatePassword
+        meta:
+          id: req_3dc4433e889143a4927411fc171f0574
+          created: 1756224919975
+          modified: 1756225996718
+          isPrivate: false
+          description: ""
+          sortKey: -1756223091982
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "oldPassword": "123456",
+              "newPassword": "p3w1lk3r"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzU2MjI0NDExLCJleHAiOjE3NTYyMjgwMTF9.VMtqD8VFa9TLNZjg7p7HWBCsRmz95G7OyIsGwmvQ7NU
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/users/reset-password/request
+        name: resetPassRequest
+        meta:
+          id: req_21b8a6739c1d4aa4955d16c0d8a174a7
+          created: 1756225049715
+          modified: 1756225509198
+          isPrivate: false
+          description: ""
+          sortKey: -1756223092057
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            
+            {
+              "email": "lucas@gmail.com"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/users/reset-password/confirm
+        name: resetPassConfim
+        meta:
+          id: req_214ea55bb0e14c99908e8cd44a4ce4fe
+          created: 1756225189329
+          modified: 1756225534652
+          isPrivate: false
+          description: ""
+          sortKey: -1756223092044.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            
+            {
+              "email": "lucas@gmail.com",
+            	"code": "q7309s",
+            	"newPassword":"1234567"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: ProdutividadeGeral
+    meta:
+      id: fld_703975a580014829af16b6075b5c9cab
+      created: 1756311177995
+      modified: 1756378477854
+      sortKey: -1756311177995
+      description: ""
+    children:
+      - url: http://localhost:3000/api/produtividade-diaria/7
+        name: UpdateProdutividade
+        meta:
+          id: req_e2170da8a1234fa4bfd2c143fbbcff70
+          created: 1756320034944
+          modified: 1756382663289
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440255
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "cin_amplo_geral_id": 11,
+                "data": "2025-09-04",
+                "quantidade": 150
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjM4MDM3NiwiZXhwIjoxNzU2NDA5MTc2fQ.DH02Ao1w1YYR-6P4R5GZcfWFSrSiwvmxj-HravNnVM4
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade-diaria
+        name: CreateProdutividadeGeral
+        meta:
+          id: req_014bb4cf229140dd8c2ca3f6c9cc8df1
+          created: 1756379553741
+          modified: 1756468634982
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440355
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            [
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-01-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-02-05",
+                "quantidade": 132
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-03-05",
+                "quantidade": 133
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-04-05",
+                "quantidade": 134
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-05-05",
+                "quantidade": 135
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-06-05",
+                "quantidade": 136
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-07-05",
+                "quantidade": 137
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-08-05",
+                "quantidade": 138
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-09-05",
+                "quantidade": 139
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-10-05",
+                "quantidade": 140
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-11-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 18,
+                "data": "2025-12-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-01-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-02-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-03-05",
+                "quantidade": 143
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-04-05",
+                "quantidade": 144
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-05-05",
+                "quantidade": 145
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-06-05",
+                "quantidade": 146
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-07-05",
+                "quantidade": 147
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-08-05",
+                "quantidade": 148
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-09-05",
+                "quantidade": 149
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-10-05",
+                "quantidade": 150
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-11-05",
+                "quantidade": 151
+              },
+              {
+                "cin_amplo_geral_id": 19,
+                "data": "2025-12-05",
+                "quantidade": 152
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-01-05",
+                "quantidade": 101
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-02-05",
+                "quantidade": 102
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-03-05",
+                "quantidade": 103
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-04-05",
+                "quantidade": 104
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-05-05",
+                "quantidade": 105
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-06-05",
+                "quantidade": 106
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-07-05",
+                "quantidade": 107
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-08-05",
+                "quantidade": 108
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-09-05",
+                "quantidade": 109
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-10-05",
+                "quantidade": 110
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-11-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 20,
+                "data": "2025-12-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-01-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-02-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-03-05",
+                "quantidade": 113
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-04-05",
+                "quantidade": 114
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-05-05",
+                "quantidade": 115
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-06-05",
+                "quantidade": 116
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-07-05",
+                "quantidade": 117
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-08-05",
+                "quantidade": 118
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-09-05",
+                "quantidade": 119
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-10-05",
+                "quantidade": 120
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-11-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 21,
+                "data": "2025-12-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-01-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-02-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-03-05",
+                "quantidade": 123
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-04-05",
+                "quantidade": 124
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-05-05",
+                "quantidade": 125
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-06-05",
+                "quantidade": 126
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-07-05",
+                "quantidade": 127
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-08-05",
+                "quantidade": 128
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-09-05",
+                "quantidade": 129
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-10-05",
+                "quantidade": 130
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-11-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 22,
+                "data": "2025-12-05",
+                "quantidade": 132
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-01-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-02-05",
+                "quantidade": 132
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-03-05",
+                "quantidade": 133
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-04-05",
+                "quantidade": 134
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-05-05",
+                "quantidade": 135
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-06-05",
+                "quantidade": 136
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-07-05",
+                "quantidade": 137
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-08-05",
+                "quantidade": 138
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-09-05",
+                "quantidade": 139
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-10-05",
+                "quantidade": 140
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-11-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 23,
+                "data": "2025-12-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-01-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-02-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-03-05",
+                "quantidade": 143
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-04-05",
+                "quantidade": 144
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-05-05",
+                "quantidade": 145
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-06-05",
+                "quantidade": 146
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-07-05",
+                "quantidade": 147
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-08-05",
+                "quantidade": 148
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-09-05",
+                "quantidade": 149
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-10-05",
+                "quantidade": 150
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-11-05",
+                "quantidade": 151
+              },
+              {
+                "cin_amplo_geral_id": 24,
+                "data": "2025-12-05",
+                "quantidade": 152
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-01-05",
+                "quantidade": 101
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-02-05",
+                "quantidade": 102
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-03-05",
+                "quantidade": 103
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-04-05",
+                "quantidade": 104
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-05-05",
+                "quantidade": 105
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-06-05",
+                "quantidade": 106
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-07-05",
+                "quantidade": 107
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-08-05",
+                "quantidade": 108
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-09-05",
+                "quantidade": 109
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-10-05",
+                "quantidade": 110
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-11-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 25,
+                "data": "2025-12-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-01-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-02-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-03-05",
+                "quantidade": 113
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-04-05",
+                "quantidade": 114
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-05-05",
+                "quantidade": 115
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-06-05",
+                "quantidade": 116
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-07-05",
+                "quantidade": 117
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-08-05",
+                "quantidade": 118
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-09-05",
+                "quantidade": 119
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-10-05",
+                "quantidade": 120
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-11-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 26,
+                "data": "2025-12-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-01-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-02-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-03-05",
+                "quantidade": 123
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-04-05",
+                "quantidade": 124
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-05-05",
+                "quantidade": 125
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-06-05",
+                "quantidade": 126
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-07-05",
+                "quantidade": 127
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-08-05",
+                "quantidade": 128
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-09-05",
+                "quantidade": 129
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-10-05",
+                "quantidade": 130
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-11-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 27,
+                "data": "2025-12-05",
+                "quantidade": 132
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-01-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-02-05",
+                "quantidade": 132
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-03-05",
+                "quantidade": 133
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-04-05",
+                "quantidade": 134
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-05-05",
+                "quantidade": 135
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-06-05",
+                "quantidade": 136
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-07-05",
+                "quantidade": 137
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-08-05",
+                "quantidade": 138
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-09-05",
+                "quantidade": 139
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-10-05",
+                "quantidade": 140
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-11-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 28,
+                "data": "2025-12-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-01-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-02-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-03-05",
+                "quantidade": 143
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-04-05",
+                "quantidade": 144
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-05-05",
+                "quantidade": 145
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-06-05",
+                "quantidade": 146
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-07-05",
+                "quantidade": 147
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-08-05",
+                "quantidade": 148
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-09-05",
+                "quantidade": 149
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-10-05",
+                "quantidade": 150
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-11-05",
+                "quantidade": 151
+              },
+              {
+                "cin_amplo_geral_id": 29,
+                "data": "2025-12-05",
+                "quantidade": 152
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-01-05",
+                "quantidade": 101
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-02-05",
+                "quantidade": 102
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-03-05",
+                "quantidade": 103
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-04-05",
+                "quantidade": 104
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-05-05",
+                "quantidade": 105
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-06-05",
+                "quantidade": 106
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-07-05",
+                "quantidade": 107
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-08-05",
+                "quantidade": 108
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-09-05",
+                "quantidade": 109
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-10-05",
+                "quantidade": 110
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-11-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 30,
+                "data": "2025-12-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-01-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-02-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-03-05",
+                "quantidade": 113
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-04-05",
+                "quantidade": 114
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-05-05",
+                "quantidade": 115
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-06-05",
+                "quantidade": 116
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-07-05",
+                "quantidade": 117
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-08-05",
+                "quantidade": 118
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-09-05",
+                "quantidade": 119
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-10-05",
+                "quantidade": 120
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-11-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 31,
+                "data": "2025-12-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-01-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-02-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-03-05",
+                "quantidade": 123
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-04-05",
+                "quantidade": 124
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-05-05",
+                "quantidade": 125
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-06-05",
+                "quantidade": 126
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-07-05",
+                "quantidade": 127
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-08-05",
+                "quantidade": 128
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-09-05",
+                "quantidade": 129
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-10-05",
+                "quantidade": 130
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-11-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 32,
+                "data": "2025-12-05",
+                "quantidade": 132
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-01-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-02-05",
+                "quantidade": 132
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-03-05",
+                "quantidade": 133
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-04-05",
+                "quantidade": 134
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-05-05",
+                "quantidade": 135
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-06-05",
+                "quantidade": 136
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-07-05",
+                "quantidade": 137
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-08-05",
+                "quantidade": 138
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-09-05",
+                "quantidade": 139
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-10-05",
+                "quantidade": 140
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-11-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 33,
+                "data": "2025-12-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-01-05",
+                "quantidade": 141
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-02-05",
+                "quantidade": 142
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-03-05",
+                "quantidade": 143
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-04-05",
+                "quantidade": 144
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-05-05",
+                "quantidade": 145
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-06-05",
+                "quantidade": 146
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-07-05",
+                "quantidade": 147
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-08-05",
+                "quantidade": 148
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-09-05",
+                "quantidade": 149
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-10-05",
+                "quantidade": 150
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-11-05",
+                "quantidade": 151
+              },
+              {
+                "cin_amplo_geral_id": 34,
+                "data": "2025-12-05",
+                "quantidade": 152
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-01-05",
+                "quantidade": 101
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-02-05",
+                "quantidade": 102
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-03-05",
+                "quantidade": 103
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-04-05",
+                "quantidade": 104
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-05-05",
+                "quantidade": 105
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-06-05",
+                "quantidade": 106
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-07-05",
+                "quantidade": 107
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-08-05",
+                "quantidade": 108
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-09-05",
+                "quantidade": 109
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-10-05",
+                "quantidade": 110
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-11-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 35,
+                "data": "2025-12-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-01-05",
+                "quantidade": 111
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-02-05",
+                "quantidade": 112
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-03-05",
+                "quantidade": 113
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-04-05",
+                "quantidade": 114
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-05-05",
+                "quantidade": 115
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-06-05",
+                "quantidade": 116
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-07-05",
+                "quantidade": 117
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-08-05",
+                "quantidade": 118
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-09-05",
+                "quantidade": 119
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-10-05",
+                "quantidade": 120
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-11-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 36,
+                "data": "2025-12-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-01-05",
+                "quantidade": 121
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-02-05",
+                "quantidade": 122
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-03-05",
+                "quantidade": 123
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-04-05",
+                "quantidade": 124
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-05-05",
+                "quantidade": 125
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-06-05",
+                "quantidade": 126
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-07-05",
+                "quantidade": 127
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-08-05",
+                "quantidade": 128
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-09-05",
+                "quantidade": 129
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-10-05",
+                "quantidade": 130
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-11-05",
+                "quantidade": 131
+              },
+              {
+                "cin_amplo_geral_id": 37,
+                "data": "2025-12-05",
+                "quantidade": 132
+              }
+            ]
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade-diaria/6
+        name: DeleteProdutividade
+        meta:
+          id: req_4ff8cc828abb434eb700737da98a872a
+          created: 1756382696609
+          modified: 1756382717393
+          isPrivate: false
+          description: ""
+          sortKey: -1756346982376
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjM4MDM3NiwiZXhwIjoxNzU2NDA5MTc2fQ.DH02Ao1w1YYR-6P4R5GZcfWFSrSiwvmxj-HravNnVM4
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade/top-cities?ano=2025&limit=10
+        name: ListTopProdutividadeGeral
+        meta:
+          id: req_6703e163ef934af4a290b9f9f9d2d7e4
+          created: 1756382740842
+          modified: 1756813327223
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440305
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade/top-and-least-cities?ano=2025&limit=5
+        name: ListTopAndLeastProdutividadeGeral
+        meta:
+          id: req_f0ecef0a63b64ec8a114807dc6206ac6
+          created: 1756382808519
+          modified: 1756469638072
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440280
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade/least-cities?ano=2025&limit=5
+        name: ListLeastProdutividadeGeral
+        meta:
+          id: req_86e8dc5a32c4462abffb3edf6595f229
+          created: 1756382845855
+          modified: 1756469664882
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440267.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade/mensal?cin_amplo_geral_id=22&ano=2025
+        name: GetMonthlyProdutividadeGeral
+        meta:
+          id: req_8fe22efff97c4129a32e6490b1e54f22
+          created: 1756382886579
+          modified: 1756469693690
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440261.25
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade/by-cidade/Salvador
+        name: ListProdutividadeGeralByNome
+        meta:
+          id: req_c56bca333b9c474c8ec9d469cc0364ec
+          created: 1756732860530
+          modified: 1756732877497
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440273.75
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/produtividade/geral-mensal
+        name: ListProdutividadeGeralMensal
+        meta:
+          id: req_4f913aac05ca4031846a076464a4fe32
+          created: 1756733299875
+          modified: 1756733325812
+          isPrivate: false
+          description: ""
+          sortKey: -1756378440264.375
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: AmploGeral
+    meta:
+      id: fld_a0c270a0fc914927a18e54d3d2b26289
+      created: 1756311346445
+      modified: 1756378467154
+      sortKey: -1756311346445
+      description: ""
+    children:
+      - url: http://localhost:3000/api/amplo-geral
+        name: CreateAmploGeral
+        meta:
+          id: req_38c0dbad82664033ae35f2395be5f91e
+          created: 1756315516693
+          modified: 1756467516342
+          isPrivate: false
+          description: ""
+          sortKey: -1756315524497
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            [
+              {
+                "nome_municipio": "São Paulo",
+                "status_infra": "adequada",
+                "cidade_visita": false,
+                "periodo_visita": null,
+                "periodo_instalacao": null,
+                "data_visita": "2025-09-21T11:33:35.000Z",
+                "data_instalacao": "2025-09-22T11:33:35.000Z",
+                "status_visita": "Aprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-15T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Rio de Janeiro",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-24T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-25T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Reprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-11T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Belo Horizonte",
+                "status_infra": "adequada",
+                "cidade_visita": false,
+                "periodo_visita": null,
+                "periodo_instalacao": null,
+                "data_visita": "2025-09-14T11:33:35.000Z",
+                "data_instalacao": "2025-09-15T11:33:35.000Z",
+                "status_visita": "Aprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-07-31T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Brasília",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-21T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-26T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Reprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-19T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Salvador",
+                "status_infra": "adequada",
+                "cidade_visita": false,
+                "periodo_visita": null,
+                "periodo_instalacao": null,
+                "data_visita": "2025-09-20T11:33:35.000Z",
+                "data_instalacao": "2025-09-23T11:33:35.000Z",
+                "status_visita": "Aprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-14T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Fortaleza",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-08T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-15T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Aprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-08-20T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Curitiba",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-08T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-09T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Aprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-14T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Manaus",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-10T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-19T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Reprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-09T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Recife",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-09T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-15T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Aprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-18T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Porto Alegre",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-26T11:33:35.000Z",
+                "periodo_instalacao": "2025-10-02T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Aprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-08-19T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Goiânia",
+                "status_infra": "adequada",
+                "cidade_visita": false,
+                "periodo_visita": null,
+                "periodo_instalacao": null,
+                "data_visita": "2025-09-08T11:33:35.000Z",
+                "data_instalacao": "2025-09-15T11:33:35.000Z",
+                "status_visita": "Reprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-15T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Belém",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-12T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-21T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Reprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-18T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Campinas",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-27T11:33:35.000Z",
+                "periodo_instalacao": "2025-10-05T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Aprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-08T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "São Luís",
+                "status_infra": "adequada",
+                "cidade_visita": false,
+                "periodo_visita": null,
+                "periodo_instalacao": null,
+                "data_visita": "2025-09-28T11:33:35.000Z",
+                "data_instalacao": "2025-10-02T11:33:35.000Z",
+                "status_visita": "Reprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-28T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Maceió",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-05T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-15T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Reprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-07-30T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Natal",
+                "status_infra": "adequada",
+                "cidade_visita": false,
+                "periodo_visita": null,
+                "periodo_instalacao": null,
+                "data_visita": "2025-09-03T11:33:35.000Z",
+                "data_instalacao": "2025-09-06T11:33:35.000Z",
+                "status_visita": "Reprovado",
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-08-03T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Teresina",
+                "status_infra": "adequada",
+                "cidade_visita": false,
+                "periodo_visita": null,
+                "periodo_instalacao": null,
+                "data_visita": "2025-09-03T11:33:35.000Z",
+                "data_instalacao": "2025-09-06T11:33:35.000Z",
+                "status_visita": "Reprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-03T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "João Pessoa",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-12T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-21T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Reprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-08-21T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Campo Grande",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-19T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-27T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Aprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "instalado",
+                "publicacao": "2025-08-17T11:33:35.000Z"
+              },
+              {
+                "nome_municipio": "Cuiabá",
+                "status_infra": "adequada",
+                "cidade_visita": true,
+                "periodo_visita": "2025-09-18T11:33:35.000Z",
+                "periodo_instalacao": "2025-09-26T11:33:35.000Z",
+                "data_visita": null,
+                "data_instalacao": null,
+                "status_visita": "Aprovado",
+                "status_publicacao": "publicado",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-08-26T11:33:35.000Z"
+              }
+            ]
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/16
+        name: UpdateAmploGeral
+        meta:
+          id: req_c9c002bac90e4ee79a1cbcf8e96e3c69
+          created: 1756319314352
+          modified: 1756401448609
+          isPrivate: false
+          description: ""
+          sortKey: -1756269308314.5
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+                "status_publicacao": "aguardando_publicacao",
+                "status_instalacao": "aguardando_instalacao",
+                "publicacao": "2025-09-02",
+                "instalacao": "2025-09-02"
+              }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjM4MDM3NiwiZXhwIjoxNzU2NDA5MTc2fQ.DH02Ao1w1YYR-6P4R5GZcfWFSrSiwvmxj-HravNnVM4
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/9
+        name: DeleteAmploGeral
+        meta:
+          id: req_73a43191026747658fb42910a205d83b
+          created: 1756319652016
+          modified: 1756319679555
+          isPrivate: false
+          description: ""
+          sortKey: -1756246200223.25
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral
+        name: ListAllAmploGeral
+        meta:
+          id: req_342eaf6ec450496c86cbfdab881b8c8e
+          created: 1756319798365
+          modified: 1756469413604
+          isPrivate: false
+          description: ""
+          sortKey: -1756234646177.625
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/nome-municipio?nome_municipio=Belém
+        name: ListAmploGeralByNomeMunicipio
+        meta:
+          id: req_18432a87245f46438ca446c04f7f622a
+          created: 1756319868433
+          modified: 1756469461875
+          isPrivate: false
+          description: ""
+          sortKey: -1756228869154.8125
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/status-visita?status_visita=Aprovado
+        name: ListAmploGeralByStatusVisita
+        meta:
+          id: req_948ea7fbeed0402e81fa3c219653228c
+          created: 1756319904429
+          modified: 1756469481305
+          isPrivate: false
+          description: ""
+          sortKey: -1756225980643.4062
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/periodo-visita?periodo_visita=2025-09-21
+        name: ListAmploGeralByPeriodoVisita
+        meta:
+          id: req_0b99fe4b2d0f4185bd38e57b29e62af2
+          created: 1756319926227
+          modified: 1756469531382
+          isPrivate: false
+          description: ""
+          sortKey: -1756224536387.7031
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/status-infra?status_infra=Aprovado
+        name: ListAmploGeralByStatusInfra
+        meta:
+          id: req_dd9dc219166b40ffb707bc4c31af9a64
+          created: 1756319944620
+          modified: 1756469563679
+          isPrivate: false
+          description: ""
+          sortKey: -1756223814259.8516
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/publicacao?publicacao=2025-09-01
+        name: ListAmploGeralByPublicacao
+        meta:
+          id: req_f9cdeda52f6f4553976ddbffe08eb384
+          created: 1756319958147
+          modified: 1756320826321
+          isPrivate: false
+          description: ""
+          sortKey: -1756223453195.9258
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/instalacao?instalacao=2025-10-10
+        name: ListAmploGeralByInstalacao
+        meta:
+          id: req_fe1c098961d1474a921fc6e74ea69986
+          created: 1756320017880
+          modified: 1756379522246
+          isPrivate: false
+          description: ""
+          sortKey: -1756223272663.963
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/status-publicacao
+        name: ListAmploGeralbyStatusPublicacao
+        meta:
+          id: req_72091ca9e438461e85ee4fb8614dadf2
+          created: 1756401488671
+          modified: 1756469425535
+          isPrivate: false
+          description: ""
+          sortKey: -1756231757666.2188
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/status-instalacao
+        name: ListAmploGeralbyStatusInstalacao
+        meta:
+          id: req_9367df87301d41088e78d8d9cbe3fab6
+          created: 1756401681311
+          modified: 1756469438880
+          isPrivate: false
+          description: ""
+          sortKey: -1756230313410.5156
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjQ2NzQ5OSwiZXhwIjoxNzU2NDk2Mjk5fQ.88fryIKP-5D8OdoGKkpTIorn4nQjBGZB7xF07ggfvec
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/status-visita-breakdown
+        name: ListAmploGeralByStatusVisitaBreakdown
+        meta:
+          id: req_5b7a951b9d0b479799897ab9def0498e
+          created: 1756730777468
+          modified: 1756730883010
+          isPrivate: false
+          description: ""
+          sortKey: -1756223182397.9814
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/status-publicacao-breakdown
+        name: ListAmploGeralByStatusPublicacaoBreakdown
+        meta:
+          id: req_cacf55b50fe64eac86eb63954d219f23
+          created: 1756730801298
+          modified: 1756730899769
+          isPrivate: false
+          description: ""
+          sortKey: -1756223137264.9907
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/status-instalacao-breakdown
+        name: ListAmploGeralByStatusInstalacaoBreakdown
+        meta:
+          id: req_7d3b4c558b7f483b90f13d4248a3def5
+          created: 1756730829042
+          modified: 1756730910662
+          isPrivate: false
+          description: ""
+          sortKey: -1756223114698.4954
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/amplo-geral/visited-cities
+        name: ListAmploGeralByVisitedCities
+        meta:
+          id: req_bce8ee7dcb534f7fb317d3daed125125
+          created: 1756730849930
+          modified: 1756730859001
+          isPrivate: false
+          description: ""
+          sortKey: -1756223103415.2476
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiY2FyZ28iOiJBRE1JTiIsImlhdCI6MTc1NjMxOTA3NiwiZXhwIjoxNzU2MzIyNjc2fQ.MGc2YZb57dpeyHBg4dnDOEq8CFT38ywdhlTo3rYM20I
+          prefix: Bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_784ce0220934a07542b94636179549d74b1f62b0
+    created: 1756223048948
+    modified: 1756233796258
+  cookies:
+    - key: cookiesession1
+      value: 678B2890BAEEEBA2DF817680F23E1A97
+      domain: servicos.ba.gov.br
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-08-26T18:43:16.258Z
+      lastAccessed: 2025-08-26T18:43:16.258Z
+      id: cbd437c3-d839-4805-9348-1d7a3459fada
+environments:
+  name: Base Environment
+  meta:
+    id: env_784ce0220934a07542b94636179549d74b1f62b0
+    created: 1756223048946
+    modified: 1756223048946
+    isPrivate: false
