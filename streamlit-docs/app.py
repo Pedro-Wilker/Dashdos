@@ -66,9 +66,11 @@ elif page == "Como Usar":
     - Configure o banco (PostgreSQL):
       ```bash
       # Crie o DB
-      psql -U postgres -c "CREATE DATABASE dashdos_db;"
+      psql -U postgres -c "CREATE DATABASE dashdos_db;" ou abra o pgAdmin e crie o DB manualmente.
+      # Inicie o prisma
+      npx prisma generate
       # Migrações (se houver)
-      npx sequelize-cli db:migrate
+      npx prisma migrate --name init
       ```
     - Inicie o servidor:
       ```bash
