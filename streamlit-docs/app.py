@@ -26,7 +26,7 @@ if page == "Introdução":
     
     ### API (api_cin):
     
-    A API é uma aplicação Node.js com Express e Sequelize (para PostgreSQL) que gerencia dados de municípios da Bahia, focando em visitas, instalações, publicações e produtividades de CINs (Carteira de Identidade Nacional). Ela oferece endpoints para consultas gerais, breakdowns de status, rankings de cidades e detalhes por município. Desenvolvida com autenticação JWT (opcional), a API suporta operações CRUD para entidades como `AmploGeral` (municípios) e `ProdutividadeDiaria`.
+    A API é uma aplicação Node.js com Express que gerencia dados de municípios da Bahia, focando em visitas, instalações, publicações e produtividades de CINs (Carteira de Identidade Nacional). Ela oferece endpoints para consultas gerais, breakdowns de status, rankings de cidades e detalhes por município. Desenvolvida com autenticação JWT (opcional), a API suporta operações CRUD para entidades como `AmploGeral` (municípios) e `ProdutividadeDiaria`.
 
     ### Dashboard (dashboard_cin):
     
@@ -51,7 +51,7 @@ elif page == "Como Usar":
     - Entre na pasta `api_cin`:
       ```bash
       cd api_cin
-      npm install  # Instala dependências (Express, Sequelize, etc.)
+      npm install  # Instala dependências (Express, jwt, etc.)
       ```
     - Crie `.env` na raiz de `api_cin`:
       ```env
@@ -301,49 +301,77 @@ elif page == "Estrutura da API":
     st.markdown("""
     ## Arquitetura do Backend
 
-    O projeto `api_cin` é uma API RESTful em Node.js/Express com Sequelize para ORM (PostgreSQL). Estrutura de pastas:
+    O projeto `api_cin` é uma API RESTful em Node.js/Express com Express para ORM (PostgreSQL). Estrutura de pastas:
 
     ```
     api_cin/
     ├── src/
-    │   ├── config/
-    │   │   └── database.js  # Configuração de conexão DB (Sequelize)
+    │   ├── prisma/
+    │   │   └── migrations/ # Migrações do banco (se usar Prisma)
+    │   │   └── schema.prisma  # Definição do schema (modelos, relações)
     │   ├── controllers/
     │   │   ├── AmploGeralController.js  # Lógica de endpoints (getAll, getByNome, breakdowns)
     │   │   └── ProdutividadeController.js  # Controladores para produtividades (top-cities, geral-mensal)
-    │   ├── models/
-    │   │   ├── AmploGeral.js  # Modelo Sequelize para municípios (campos: nome_municipio, status_visita, etc.)
-    │   │   └── ProdutividadeDiaria.js  # Modelo para produtividades (data, quantidade, cin_amplo_geral_id)
-    │   ├── routes/
-    │   │   └── amploGeralRoutes.js  # Rotas: /amplo-geral, /status-visita-breakdown, etc.
+    │   ├── middlewares/ # Middleware (ex.: auth JWT, error handling) 
+    │   │   └── auth.ts # Middleware de autenticação JWT
     │   └── services/
     │       └── AmploGeralService.js  # Queries SQL/filtros (ex.: top cities por ano)
+    │   └── route.ts # Define rotas e conecta controllers
+    │   └── server.ts # Entrada principal (Express app, conecta DB, monta rotas) 
     ├── .env  # Variáveis (DB_HOST, JWT_SECRET, etc.)
-    ├── package.json  # Dependências: express, sequelize, cors, dotenv
-    ├── server.js  # Entrada: app.use(routes), listen(PORT)
+    ├── package.json  # Dependências: express, cors, dotenv
     └── README.md  # Setup básico
     ```
 
     **Fluxo Geral**:
-    - `server.js`: Inicializa Express, conecta DB via `config/database.js`, monta rotas.
-    - Rotas (`routes/amploGeralRoutes.js`): Mapeiam URLs para controllers (ex.: GET /amplo-geral → AmploGeralController.getAll).
+    - `server.ts`: Inicializa Servidor.
+    - `route.ts` (`routes/amploGeralRoutes.js`): Mapeiam URLs para controllers (ex.: GET /amplo-geral → AmploGeralController.getAll).
     - Controllers: Chamam services para lógica (ex.: AmploGeralService filtra por status/ano).
-    - Services: Executam queries Sequelize (ex.: findAll com where para breakdowns).
-    - Models: Definem schema (ex.: AmploGeral hasMany ProdutividadeDiaria).
+    - Services: Executam queries (ex.: findAll com where para breakdowns).
+    - Prisma: schema.prisma. # Define modelos (AmploGeral, ProdutividadeDiaria) e relações (1:N).
 
-    Exemplo de Código em `server.js`:
-    ```js
-    const express = require('express');
-    const sequelize = require('./src/config/database');
-    const amploGeralRoutes = require('./src/routes/amploGeralRoutes');
+    Exemplo de Código em `server.ts`:
+    ```ts
+        import express from 'express';
+        import cors from 'cors';
+        import dotenv from 'dotenv';
+        import 'express-async-errors'; 
+        import { PrismaClient } from '@prisma/client';
+        import routes from './routes'; 
 
-    const app = express();
-    app.use(express.json());
-    app.use('/api', amploGeralRoutes);  // Monta rotas em /api
+        dotenv.config();
 
-    sequelize.sync().then(() => {
-      app.listen(3000, () => console.log('Server running on port 3000'));
-    });
+        const app = express();
+        const prisma = new PrismaClient();
+
+        app.use(cors());
+        app.use(express.json());
+
+        // Middleware global para log de requests 
+        app.use((req, res, next) => {
+          console.log(`${req.method} ${req.url}`);
+          next();
+        });
+
+        // Conecta as rotas
+        app.use('/api', routes);
+
+        // Tratamento de erros global
+        app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+          console.error(err.stack);
+          res.status(500).json({ error: 'Internal Server Error' });
+        });
+
+        // Desconecta Prisma ao encerrar o app
+        process.on('SIGINT', async () => {
+          await prisma.$disconnect();
+          process.exit(0);
+        });
+
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+          console.log(`Server running on port ${PORT}`);
+        });
     ```
     """)
 
@@ -355,75 +383,263 @@ elif page == "CRUD, Services e Rotas":
     A API usa padrão MVC (Model-View-Controller), com Services para lógica de negócio. Não há "View" (é API REST), mas controllers lidam com respostas JSON.
 
     ### CRUD em AmploGeral (Municípios)
-    - **Models (`AmploGeral.js`)**: Define tabela com Sequelize.
-      Exemplo:
-      ```js
-      const { DataTypes } = require('sequelize');
-      module.exports = (sequelize) => {
-        return sequelize.define('AmploGeral', {
-          id: { type: DataTypes.INTEGER, primaryKey: True },
-          nome_municipio: { type: DataTypes.STRING, allowNull: false },
-          status_visita: { type: DataTypes.STRING },  // 'Aprovado', 'Reprovado'
-          status_publicacao: { type: DataTypes.STRING },  // 'publicado', 'aguardando'
-          status_instalacao: { type: DataTypes.STRING },  // 'instalado', 'aguardando'
-          // Relações: hasMany ProdutividadeDiaria
-        });
-      };
-      ```
-    - **Services (`AmploGeralService.js`)**: Lógica de queries/filtros.
-      Exemplo para top cities:
-      ```js
-      const { AmploGeral, ProdutividadeDiaria } = require('../models');
+    - **Model (Prisma)**: `schema.prisma` define `AmploGeral` e `ProdutividadeDiaria` com campos e relações.
+    - **Service (`AmploGeralService.js`)**: Contém funções para operações CRUD e queries complexas.
+      Exemplo: `CreateAmploGeralService.ts`
+      ```ts
+        import { PrismaClient, Cargo, StatusVisita, StatusPublicacao, StatusInstalacao } from '@prisma/client';
+        import jwt from 'jsonwebtoken';
 
-      exports.getTopCities = async (ano, limit) => {
-        return AmploGeral.findAll({
-          include: [{ model: ProdutividadeDiaria, where: { data: { [Op.gte]: `${ano}-01-01` } } }],
-          order: [[{ model: ProdutividadeDiaria }, 'quantidade', 'DESC']],
-          limit: limit,
-          attributes: ['nome_municipio', [sequelize.fn('SUM', sequelize.col('produtividades_diarias.quantidade')), 'total_quantidade']]
-        });
-      };
-      ```
-      - **CRUD**: Create (POST novo município), Read (GET all/by ID), Update (PUT status), Delete (DELETE por ID) — implementados em controller chamando service.model.create/find/update/destroy.
+        const prisma = new PrismaClient();
 
-    - **Controllers (`AmploGeralController.js`)**: Manipulam requests/responses.
-      Exemplo:
-      ```js
-      const AmploGeralService = require('../services/AmploGeralService');
-
-      exports.getAll = async (req, res) => {
-        try {
-          const cities = await AmploGeralService.getAll();
-          res.json(cities);
-        } catch (error) {
-          res.status(500).json({ error: error.message });
+        interface CreateAmploGeralData {
+          nome_municipio: string;
+          status_infra: string;
+          cidade_visita: boolean;
+          periodo_visita?: Date;
+          periodo_instalacao?: Date;
+          data_visita?: Date;
+          data_instalacao?: Date;
+          status_visita: StatusVisita;
+          status_publicacao: StatusPublicacao;
+          status_instalacao: StatusInstalacao;
+          publicacao: Date;
         }
-      };
 
-      exports.getByNome = async (req, res) => {
-        const { nome_municipio } = req.query;
-        try {
-          const city = await AmploGeralService.getByNome(nome_municipio);
-          res.json(city);
-        } catch (error) {
-          res.status(404).json({ error: 'Cidade não encontrada' });
+        export class CreateAmploGeralService {
+          async execute(data: CreateAmploGeralData, token: string) {
+            if (!process.env.JWT_SECRET) {
+              throw new Error('JWT_SECRET não foi configurada');
+            }
+
+            let decoded: any;
+            try {
+              decoded = jwt.verify(token, process.env.JWT_SECRET);
+            } catch (error) {
+              throw new Error('Token inválido');
+            }
+
+            const allowedRoles = [Cargo.ADMIN, Cargo.DIRETORIA, Cargo.CARTA];
+            if (!allowedRoles.includes(decoded.cargo)) {
+              throw new Error('Usuário não tem permissão para criar dados em Amplo Geral');
+            }
+
+            const existingRecord = await prisma.cin_amplo_geral.findUnique({
+              where: { nome_municipio: data.nome_municipio },
+            });
+
+            if (existingRecord) {
+              throw new Error('Este município já possui cadastro');
+            }
+
+            const amploGeral = await prisma.cin_amplo_geral.create({
+              data: {
+                nome_municipio: data.nome_municipio,
+                status_infra: data.status_infra,
+                cidade_visita: data.cidade_visita,
+                periodo_visita: data.cidade_visita ? data.periodo_visita : null,
+                periodo_instalacao: data.cidade_visita ? data.periodo_instalacao : null,
+                data_visita: !data.cidade_visita ? data.data_visita : null,
+                data_instalacao: !data.cidade_visita ? data.data_instalacao : null,
+                status_visita: data.status_visita,
+                status_publicacao: data.status_publicacao,
+                status_instalacao: data.status_instalacao,
+                publicacao: data.publicacao,
+              },
+            });
+
+            return { message: 'Amplo Geral criado', amploGeralId: amploGeral.id };
+          }
         }
-      };
+      ```
+      - ** Controller (`AmploGeralController.js`)**: Recebe requests, chama services e retorna respostas.
+      Exemplo: `AmploGeralController.ts`
+      ```ts
+          import { Request, Response } from 'express';
+          import { CreateAmploGeralService } from '../../services/AmploGeral/CreateAmploGeralService';
+          import { StatusVisita, StatusPublicacao, StatusInstalacao } from '@prisma/client';
+
+          export class CreateAmploGeralController {
+            async handle(req: Request, res: Response) {
+              const registros = req.body;
+              const token = req.headers.authorization?.split(' ')[1];
+
+              if (!token) {
+                return res.status(400).json({ error: 'Token inválido' });
+              }
+
+              if (!Array.isArray(registros) || registros.length === 0) {
+                return res.status(400).json({ error: 'Nenhum registro enviado.' });
+              }
+
+              const service = new CreateAmploGeralService();
+              const resultados = [];
+
+              for (const registro of registros) {
+                const {
+                  nome_municipio,
+                  status_infra,
+                  cidade_visita,
+                  periodo_visita,
+                  periodo_instalacao,
+                  data_visita,
+                  data_instalacao,
+                  status_visita,
+                  status_publicacao,
+                  status_instalacao,
+                  publicacao,
+                } = registro;
+
+                // Validação dos campos obrigatórios
+                if (
+                  !nome_municipio ||
+                  !status_infra ||
+                  cidade_visita === undefined ||
+                  !status_visita ||
+                  !status_publicacao ||
+                  !status_instalacao ||
+                  !publicacao
+                ) {
+                  return res.status(400).json({
+                    error: `Campos obrigatórios ausentes no município "${nome_municipio}".`,
+                  });
+                }
+
+                if (cidade_visita) {
+                  if (!periodo_visita || !periodo_instalacao) {
+                    return res.status(400).json({
+                      error: `Para cidades com visita, período de visita e instalação são obrigatórios no município "${nome_municipio}".`,
+                    });
+                  }
+                } else {
+                  if (!data_visita || !data_instalacao) {
+                    return res.status(400).json({
+                      error: `Para cidades sem visita, data de visita e instalação são obrigatórios no município "${nome_municipio}".`,
+                    });
+                  }
+                }
+
+                try {
+                  const result = await service.execute(
+                    {
+                      nome_municipio,
+                      status_infra,
+                      cidade_visita,
+                      periodo_visita: cidade_visita ? new Date(periodo_visita) : undefined,
+                      periodo_instalacao: cidade_visita ? new Date(periodo_instalacao) : undefined,
+                      data_visita: !cidade_visita ? new Date(data_visita) : undefined,
+                      data_instalacao: !cidade_visita ? new Date(data_instalacao) : undefined,
+                      status_visita,
+                      status_publicacao,
+                      status_instalacao,
+                      publicacao: new Date(publicacao),
+                    },
+                    token
+                  );
+                  resultados.push(result);
+                } catch (error: any) {
+                  return res.status(400).json({
+                    error: `Erro ao criar município "${nome_municipio}": ${error.message}`,
+                  });
+                }
+              }
+
+              return res.status(201).json({
+                message: 'Registros criados com sucesso.',
+                resultados,
+              });
+            }
+          }
       ```
       - Chama service para dados, envia JSON ou erro.
 
-    - **Rotas (`amploGeralRoutes.js`)**: Conectam URLs a controllers.
+    - **Rotas (`route.ts`)**: Conectam URLs a controllers.
       Exemplo:
       ```js
-      const router = require('express').Router();
-      const AmploGeralController = require('../controllers/AmploGeralController');
+          import { Router } from 'express';
+          import { PrismaClient } from '@prisma/client';
+          import { authMiddleware } from './middlewares/auth';
 
-      router.get('/amplo-geral', AmploGeralController.getAll);
-      router.get('/amplo-geral/nome-municipio', AmploGeralController.getByNome);
-      router.get('/amplo-geral/status-visita-breakdown', AmploGeralController.getStatusVisitaBreakdown);
-      // CRUD: router.post('/amplo-geral', AmploGeralController.create); etc.
+          import { AuthUserController } from './controllers/Users/AuthUserController';
+          import { CreateUserController } from './controllers/Users/CreateUserController';
+          import { UpdateUserController } from './controllers/Users/UpdateUserController';
+          import { UpdatePasswordController } from './controllers/Users/UpdatePasswordController';
+          import { RequestResetPasswordController } from './controllers/Users/RequestResetPasswordController';
+          import { ConfirmResetPasswordController } from './controllers/Users/ConfirmResetPasswordController';
 
-      module.exports = router;
+          import { CreateAmploGeralController } from './controllers/AmploGeral/CreateAmploGeralController';
+          import { UpdateAmploGeralController } from './controllers/AmploGeral/UpdateAmploGeralController';
+          import { DeleteAmploGeralController } from './controllers/AmploGeral/DeleteAmploGeralController';
+          import { ListAllAmploGeralController } from './controllers/AmploGeral/ListAllAmploGeralController';
+          import { ListAmploGeralByStatusVisitaController } from './controllers/AmploGeral/ListAmploGeralByStatusVisitaController';
+          import { ListByInstalacaoAmploGeralController } from './controllers/AmploGeral/ListAmploGeralByInstalacaoController'; 
+          import { UpdateProdutividadeDiariaController } from './controllers/ProdutividadeDiaria/UpdateProdutividadeDiariaController';
+          import { GetMonthlyProductivityController } from './controllers/ProdutividadeDiaria/GetMonthlyProdutividadeDiariaController';
+          import { ListTopProductiveCitiesController } from './controllers/ProdutividadeDiaria/ListTopProdutividadeDiariaController'; 
+          import { ListLeastProductiveCitiesController } from './controllers/ProdutividadeDiaria/ListLeastProdutividadeDiariaController';
+          import { ListTopAndLeastProductiveCitiesController } from './controllers/ProdutividadeDiaria/ListTopAndLeastProdutividadeDiariaController';
+          import { ListByNomeMunicipioAmploGeralController } from './controllers/AmploGeral/ListAmploGeralByMunicipioController';
+          import { ListAmploGeralByPeriodoVisitaController } from './controllers/AmploGeral/ListAmploGeralByPeriodoVisitaController';
+          import { ListAmploGeralByStatusInfraController } from './controllers/AmploGeral/ListAmploGeralByStatusInfraController';
+          import { ListAmploGeralPublicacaoController } from './controllers/AmploGeral/ListAmploGeralPublicacaoController';
+          import { CreateProdutividadeDiariaController } from './controllers/ProdutividadeDiaria/CreateProdutividadeDiariaController';
+          import { DeleteProdutividadeDiariaController } from './controllers/ProdutividadeDiaria/DeleteProdutividadeDiariaController';
+          import { adminDiretoriaMiddleware } from './middlewares/adminDiretoriaMiddleware';
+          import { ListAmploGeralByStatusInstalacaoController } from './controllers/AmploGeral/ListAmploGeralByStatusInstalacaoController';
+          import { ListAmploGeralByStatusPublicacaoController } from './controllers/AmploGeral/ListAmploGeralByStatusPublicacaoController';
+          import { ListAmploGeralByVisitasController } from './controllers/AmploGeral/ListAmploGeralByVisitasController';
+          import { ListAmploGeralByDataInstalacaoController } from './controllers/AmploGeral/ListAmploGeralByDataInstalacaoController';
+          import { ListAmploGeralByVisitedCitiesController } from './controllers/AmploGeral/ListAmploGeralByVisitedCitiesController';
+          import { ListAmploGeralByStatusVisitaBreakdownController } from './controllers/AmploGeral/ListAmploGeralByStatusVisitaBreakdownController';
+          import { ListAmploGeralByStatusPublicacaoBreakdownController } from './controllers/AmploGeral/ListAmploGeralByStatusPublicacaoBreakdownController';
+          import { ListAmploGeralByStatusInstalacaoBreakdownController } from './controllers/AmploGeral/ListAmploGeralByStatusInstalacaoBreakdownController';
+          import { ListProdutividadeByCidadeController } from './controllers/ProdutividadeDiaria/ListProdutividadeByCidadeController';
+          import { ListProdutividadeGeralMensalController } from './controllers/ProdutividadeDiaria/ListProdutividadeGeralMensalController';
+
+          const router = Router();
+          const prisma = new PrismaClient();
+
+          // --- Rotas de Usuários ---
+          router.post('/users/register', new CreateUserController().handle);
+          router.post('/users/login', new AuthUserController().handle);
+          router.put('/users/:id', authMiddleware, new UpdateUserController().handle);
+          router.put('/users/:id/password', authMiddleware, new UpdatePasswordController().handle);
+          router.post('/users/reset-password/request', new RequestResetPasswordController().handle);
+          router.post('/users/reset-password/confirm', new ConfirmResetPasswordController().handle);
+
+          // --- Rotas de cin amplo geral ---
+          router.post('/amplo-geral', authMiddleware, adminDiretoriaMiddleware, new CreateAmploGeralController().handle);
+          router.put('/amplo-geral/:id', authMiddleware, adminDiretoriaMiddleware, new UpdateAmploGeralController().handle);
+          router.delete('/amplo-geral/:id', authMiddleware, adminDiretoriaMiddleware, new DeleteAmploGeralController().handle);
+          router.get('/amplo-geral', new ListAllAmploGeralController().handle);
+          router.get('/amplo-geral/nome-municipio', new ListByNomeMunicipioAmploGeralController().handle);
+          router.get('/amplo-geral/status-visita', new ListAmploGeralByStatusVisitaController().handle);
+          router.get('/amplo-geral/periodo-visita', new ListAmploGeralByPeriodoVisitaController().handle);
+          router.get('/amplo-geral/status-infra', new ListAmploGeralByStatusInfraController().handle);
+          router.get('/amplo-geral/publicacao', new ListAmploGeralPublicacaoController().handle);
+          router.get('/amplo-geral/instalacao', new ListByInstalacaoAmploGeralController().handle);
+          router.get('/amplo-geral/status-publicacao', new ListAmploGeralByStatusPublicacaoController().handle);
+          router.get('/amplo-geral/status-instalacao', new ListAmploGeralByStatusInstalacaoController().handle);
+          router.get('/amplo-geral/visitas-proximas', new ListAmploGeralByVisitasController().handle);
+          router.get('/amplo-geral/instalacoes-recentes', new ListAmploGeralByDataInstalacaoController().handle);
+          router.get('/amplo-geral/visited-cities', new ListAmploGeralByVisitedCitiesController().handle);
+          router.get('/amplo-geral/status-visita-breakdown', new ListAmploGeralByStatusVisitaBreakdownController().handle);
+          router.get('/amplo-geral/status-publicacao-breakdown', new ListAmploGeralByStatusPublicacaoBreakdownController().handle);
+          router.get('/amplo-geral/status-instalacao-breakdown', new ListAmploGeralByStatusInstalacaoBreakdownController().handle);
+
+          // --- Rotas de produtividade diaria cin ---
+          router.post('/produtividade-diaria', authMiddleware, adminDiretoriaMiddleware, new CreateProdutividadeDiariaController().handle);
+          router.put('/produtividade-diaria/:id', authMiddleware, adminDiretoriaMiddleware, new UpdateProdutividadeDiariaController().handle);
+          router.delete('/produtividade-diaria/:id', authMiddleware, adminDiretoriaMiddleware, new DeleteProdutividadeDiariaController().handle);
+
+          router.get('/produtividade/mensal', new GetMonthlyProductivityController().handle);
+          router.get('/produtividade/top-cities', new ListTopProductiveCitiesController().handle);
+          router.get('/produtividade/least-cities', new ListLeastProductiveCitiesController().handle);
+          router.get('/produtividade/top-and-least-cities', new ListTopAndLeastProductiveCitiesController().handle);
+          router.get('/produtividade/by-cidade/:nome_municipio', new ListProdutividadeByCidadeController().handle);
+          router.get('/produtividade/geral-mensal', new ListProdutividadeGeralMensalController().handle);
+
+          export default router;      
       ```
       - Fluxo: Request → Route → Controller → Service → Model/DB → Response JSON.
 
@@ -433,7 +649,7 @@ elif page == "CRUD, Services e Rotas":
     - **Update**: PUT /api/amplo-geral/:id → Controller.update → Service.update (model.update) → JSON.
     - **Delete**: DELETE /api/amplo-geral/:id → Controller.delete → Service.delete (model.destroy) → 204 No Content.
 
-    Services agregam lógica (ex.: breakdowns calculam % com SQL raw ou Sequelize), evitando controllers inchados.
+    Services agregam lógica (ex.: breakdowns calculam % com SQL raw), evitando controllers inchados.
     """)
 
 elif page == "Dashboard Frontend":
