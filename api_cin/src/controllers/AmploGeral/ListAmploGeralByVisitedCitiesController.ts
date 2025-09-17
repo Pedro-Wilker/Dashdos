@@ -1,15 +1,10 @@
 import { Request, Response } from 'express';
-import { ListAmploGeralByVisitedCities } from '../../services/AmploGeral/ListAmploGeralByVisitedCities'; 
+import { ListAmploGeralByVisitedCities } from '../../services/AmploGeral/ListAmploGeralByVisitedCities';
+import { BaseController } from '../BaseController';
 
-export class ListAmploGeralByVisitedCitiesController {
-  async handle(req: Request, res: Response) {
+export class ListAmploGeralByVisitedCitiesController extends BaseController {
+  async handle(req: Request, res: Response): Promise<Response> {
     const service = new ListAmploGeralByVisitedCities();
-
-    try {
-      const result = await service.execute();
-      return res.status(200).json(result);
-    } catch (error: any) {
-      return res.status(500).json({ error: 'Erro ao listar cidades visitadas', details: error.message });
-    }
+    return super.handle(req, res, service.execute.bind(service));
   }
 }

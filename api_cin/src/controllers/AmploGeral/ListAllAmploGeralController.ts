@@ -1,15 +1,10 @@
 import { Request, Response } from 'express';
 import { ListAllAmploGeralService } from '../../services/AmploGeral/ListAllAmploGeralService';
+import { BaseController } from '../BaseController';
 
-export class ListAllAmploGeralController {
-  async handle(req: Request, res: Response) {
+export class ListAllAmploGeralController extends BaseController {
+  async handle(req: Request, res: Response): Promise<Response> {
     const service = new ListAllAmploGeralService();
-
-    try {
-      const result = await service.execute();
-      return res.status(200).json(result);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
-    }
+    return super.handle(req, res, service.execute.bind(service));
   }
 }

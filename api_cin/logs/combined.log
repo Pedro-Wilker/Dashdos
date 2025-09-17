@@ -1,0 +1,35 @@
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-09-17T06:04:11.102Z"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:08:01.792Z","url":"/api/amplo-geral"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:08:46.304Z","url":"/amplo-geral"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:09:55.198Z","url":"/api/amplo-geral"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:12:32.829Z","url":"/v1/amplo-geral"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-09-17T06:15:39.834Z"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:15:50.259Z","url":"/v1/amplo-geral/status-publicacao"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:16:05.273Z","url":"/v1/amplo-geral/status-instalacao"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:16:12.578Z","url":"/v1/amplo-geral/nome-municipio?nome_municipio=Salvador"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:16:21.931Z","url":"/v1/amplo-geral/status-visita?status_visita=Aprovado"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:16:27.440Z","url":"/v1/amplo-geral/periodo-visita?periodo_visita=2025-09-21"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:17:58.567Z","url":"/v1/amplo-geral/status-infra?status_infra=Aprovado"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:05.637Z","url":"/v1/amplo-geral/publicacao?publicacao=2025-09-01"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:11.193Z","url":"/v1/amplo-geral/instalacao?instalacao=2025-10-10"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:28.581Z","url":"/v1/amplo-geral/status-visita-breakdown"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:33.127Z","url":"/v1/amplo-geral/status-publicacao-breakdown"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:38.002Z","url":"/v1/amplo-geral/status-instalacao-breakdown"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:43.199Z","url":"/v1/amplo-geral/visited-cities"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:48.168Z","url":"/v1/produtividade/top-cities?ano=2025&limit=10"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:52.726Z","url":"/v1/produtividade/top-and-least-cities?ano=2025&limit=5"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:18:56.493Z","url":"/v1/produtividade/by-cidade/Salvador"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:19:00.840Z","url":"/v1/produtividade/least-cities?ano=2025&limit=5"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:19:04.981Z","url":"/v1/produtividade/geral-mensal"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T06:19:08.329Z","url":"/v1/produtividade/mensal?cin_amplo_geral_id=22&ano=2025"}
+{"level":"info","message":"Request received","method":"POST","timestamp":"2025-09-17T06:19:17.016Z","url":"/v1/users/register"}
+{"level":"info","message":"Request received","method":"POST","timestamp":"2025-09-17T06:19:21.370Z","url":"/v1/users/login"}
+{"level":"info","message":"Request received","method":"POST","timestamp":"2025-09-17T06:19:27.665Z","url":"/v1/users/reset-password/request"}
+{"level":"info","message":"Request received","method":"POST","timestamp":"2025-09-17T06:19:32.373Z","url":"/v1/users/reset-password/confirm"}
+{"level":"info","message":"Request received","method":"PUT","timestamp":"2025-09-17T06:19:38.360Z","url":"/v1/users/1"}
+{"level":"info","message":"Request received","method":"PUT","timestamp":"2025-09-17T06:19:43.242Z","url":"/v1/users/1/password"}
+{"level":"info","message":"Request received","method":"POST","timestamp":"2025-09-17T06:20:05.551Z","url":"/v1/amplo-geral"}
+{"level":"info","message":"Prisma disconnected, server shutting down","timestamp":"2025-09-17T07:10:38.895Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-09-17T07:17:23.408Z"}
+{"level":"info","message":"Request received","method":"GET","timestamp":"2025-09-17T07:17:25.604Z","url":"/v1/produtividade/top-cities?ano=2025&limit=10"}
+{"level":"info","message":"Prisma disconnected, server shutting down","timestamp":"2025-09-17T07:17:30.509Z"}

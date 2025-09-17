@@ -1,21 +1,25 @@
 import { Request, Response } from 'express';
+import { z } from 'zod';
 import { ListByNomeMunicipioAmploGeralService } from '../../services/AmploGeral/ListAmploGeralByMunicipioService';
+import { BaseController } from '../BaseController';
+import logger from '../../lib/logger';
+import { MunicipioFilter } from '../../types/serviceArgs';
 
-export class ListByNomeMunicipioAmploGeralController {
-  async handle(req: Request, res: Response) {
-    const { nome_municipio } = req.query;
-
-    if (!nome_municipio || typeof nome_municipio !== 'string') {
-      return res.status(400).json({ error: 'É necessario inserir o nome do município.' });
-    }
-
-    const service = new ListByNomeMunicipioAmploGeralService();
+export class ListByNomeMunicipioAmploGeralController extends BaseController {
+  async handle(req: Request, res: Response): Promise<Response> {
+    const schema = z.object({
+      nome_municipio: z.string().min(1, 'Nome do município é obrigatório')
+    });
 
     try {
-      const result = await service.execute(nome_municipio);
-      return res.status(200).json(result);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
+      const { nome_municipio } = schema.parse(req.query) as MunicipioFilter;
+      const service = new ListByNomeMunicipioAmploGeralService();
+      return super.handle(req, res, service.execute.bind(service), nome_municipio);
+    } catch (e: any) {
+      logger.error('Validation error', { error: e.message, stack: e.stack });
+      return res.status(400).json({
+        error: { code: 'VALIDATION_ERROR', message: e.message }
+      });
     }
   }
 }

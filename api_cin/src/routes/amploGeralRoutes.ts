@@ -1,0 +1,46 @@
+import { Router } from 'express';
+import { authMiddleware } from '../middlewares/auth';
+import { adminDiretoriaMiddleware } from '../middlewares/adminDiretoriaMiddleware';
+import { CreateAmploGeralController } from '../controllers/AmploGeral/CreateAmploGeralController';
+import { UpdateAmploGeralController } from '../controllers/AmploGeral/UpdateAmploGeralController';
+import { DeleteAmploGeralController } from '../controllers/AmploGeral/DeleteAmploGeralController';
+import { ListAllAmploGeralController } from '../controllers/AmploGeral/ListAllAmploGeralController';
+import { ListAmploGeralByStatusVisitaController } from '../controllers/AmploGeral/ListAmploGeralByStatusVisitaController';
+import { ListByInstalacaoAmploGeralController } from '../controllers/AmploGeral/ListAmploGeralByInstalacaoController';
+import { ListAmploGeralByPeriodoVisitaController } from '../controllers/AmploGeral/ListAmploGeralByPeriodoVisitaController';
+import { ListAmploGeralByStatusInfraController } from '../controllers/AmploGeral/ListAmploGeralByStatusInfraController';
+import { ListAmploGeralPublicacaoController } from '../controllers/AmploGeral/ListAmploGeralPublicacaoController';
+import { ListAmploGeralByStatusPublicacaoController } from '../controllers/AmploGeral/ListAmploGeralByStatusPublicacaoController';
+import { ListAmploGeralByStatusInstalacaoController } from '../controllers/AmploGeral/ListAmploGeralByStatusInstalacaoController';
+import { ListAmploGeralByVisitasController } from '../controllers/AmploGeral/ListAmploGeralByVisitasController';
+import { ListAmploGeralByDataInstalacaoController } from '../controllers/AmploGeral/ListAmploGeralByDataInstalacaoController';
+import { ListAmploGeralByVisitedCitiesController } from '../controllers/AmploGeral/ListAmploGeralByVisitedCitiesController';
+import { ListAmploGeralByStatusVisitaBreakdownController } from '../controllers/AmploGeral/ListAmploGeralByStatusVisitaBreakdownController';
+import { ListAmploGeralByStatusPublicacaoBreakdownController } from '../controllers/AmploGeral/ListAmploGeralByStatusPublicacaoBreakdownController';
+import { ListAmploGeralByStatusInstalacaoBreakdownController } from '../controllers/AmploGeral/ListAmploGeralByStatusInstalacaoBreakdownController';
+import { ListByNomeMunicipioAmploGeralController } from '../controllers/AmploGeral/ListAmploGeralByMunicipioController';
+import { ListAmploGeralByMunicipioAutocompleteController } from '../controllers/AmploGeral/ListAmploGeralByMunicipioAutocompleteController'; 
+
+const router = Router();
+
+router.post('/amplo-geral', authMiddleware, adminDiretoriaMiddleware, new CreateAmploGeralController().handle);
+router.put('/amplo-geral/:id', authMiddleware, adminDiretoriaMiddleware, new UpdateAmploGeralController().handle);
+router.delete('/amplo-geral/:id', authMiddleware, adminDiretoriaMiddleware, new DeleteAmploGeralController().handle);
+router.get('/amplo-geral', new ListAllAmploGeralController().handle);
+router.get('/amplo-geral/nome-municipio', new ListByNomeMunicipioAmploGeralController().handle);
+router.get('/amplo-geral/status-visita', new ListAmploGeralByStatusVisitaController().handle);
+router.get('/amplo-geral/periodo-visita', new ListAmploGeralByPeriodoVisitaController().handle);
+router.get('/amplo-geral/status-infra', new ListAmploGeralByStatusInfraController().handle);
+router.get('/amplo-geral/publicacao', new ListAmploGeralPublicacaoController().handle);
+router.get('/amplo-geral/instalacao', new ListByInstalacaoAmploGeralController().handle);
+router.get('/amplo-geral/status-publicacao', new ListAmploGeralByStatusPublicacaoController().handle);
+router.get('/amplo-geral/status-instalacao', new ListAmploGeralByStatusInstalacaoController().handle);
+router.get('/amplo-geral/visitas-proximas', new ListAmploGeralByVisitasController().handle);
+router.get('/amplo-geral/instalacoes-recentes', new ListAmploGeralByDataInstalacaoController().handle);
+router.get('/amplo-geral/visited-cities', new ListAmploGeralByVisitedCitiesController().handle);
+router.get('/amplo-geral/status-visita-breakdown', new ListAmploGeralByStatusVisitaBreakdownController().handle);
+router.get('/amplo-geral/status-publicacao-breakdown', new ListAmploGeralByStatusPublicacaoBreakdownController().handle);
+router.get('/amplo-geral/status-instalacao-breakdown', new ListAmploGeralByStatusInstalacaoBreakdownController().handle);
+router.get('/amplo-geral/autocomplete', new ListAmploGeralByMunicipioAutocompleteController().handle);
+
+export default router;

@@ -1,28 +1,26 @@
 import { Request, Response } from 'express';
+import { z } from 'zod';
 import { ListTopProductiveCitiesService } from '../../services/ProdutividadeDiaria/ListTopProdutividadeDiariaService';
+import { BaseController } from '../BaseController';
+import logger from '../../lib/logger';
+import { ProductivityFilter } from '../../types/serviceArgs';
 
-export class ListTopProductiveCitiesController {
-  async handle(req: Request, res: Response) {
-    const { ano, limit } = req.query;
-
-    if (!ano || isNaN(Number(ano))) {
-      return res.status(400).json({ error: 'Ano é obrigatório e deve ser um número.' });
-    }
-
-    if (limit && (isNaN(Number(limit)) || Number(limit) <= 0)) {
-      return res.status(400).json({ error: 'Limit deve ser um número inteiro positivo.' });
-    }
-
-    const service = new ListTopProductiveCitiesService();
+export class ListTopProductiveCitiesController extends BaseController {
+  async handle(req: Request, res: Response): Promise<Response> {
+    const schema = z.object({
+      ano: z.coerce.number().int().min(2000).max(2030),
+      limit: z.coerce.number().int().positive().optional().default(5)
+    });
 
     try {
-      const result = await service.execute({
-        ano: Number(ano),
-        limit: limit ? Number(limit) : 5,
+      const { ano, limit } = schema.parse(req.query) as ProductivityFilter;
+      const service = new ListTopProductiveCitiesService();
+      return super.handle(req, res, service.execute.bind(service), { ano, limit });
+    } catch (e: any) {
+      logger.error('Validation error', { error: e.message, stack: e.stack });
+      return res.status(400).json({
+        error: { code: 'VALIDATION_ERROR', message: e.message }
       });
-      return res.status(200).json(result);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
     }
   }
 }
