@@ -2,13 +2,22 @@ import { useState } from 'react';
 import { Box, List, ListItem, Text, Button, useColorModeValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import CityListModal from './CityListModal';
-import CityDetailsModal from './CityDetailsModal'; // Novo componente adicionado
+import CityDetailsModal from './CityDetailsModal';
 
 const MotionBox = motion(Box);
 
-const CityList = ({ cities, cardTitle }) => {
+interface City {
+  nome_municipio: string;
+}
+
+interface CityListProps {
+  cities: City[] | null;
+  cardTitle: string;
+}
+
+const CityList = ({ cities, cardTitle }: CityListProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const visibleCities = cities?.slice(0, 10) || [];
   const textColor = useColorModeValue('text._light', 'text._dark');
   const hoverBg = useColorModeValue('gray.100', 'gray.600');
@@ -30,14 +39,14 @@ const CityList = ({ cities, cardTitle }) => {
         aria-label={`Lista de cidades para ${cardTitle}`}
       >
         <List spacing={2} p={4}>
-          {visibleCities.map((city, index) => (
+          {visibleCities.map((city: City, index: number) => (
             <ListItem
               key={index}
               p={2}
               borderRadius="md"
               _hover={{ bg: hoverBg }}
               cursor="pointer"
-              onClick={() => setSelectedCity(city.nome_municipio)} // Abre modal de detalhes
+              onClick={() => setSelectedCity(city.nome_municipio)}
               aria-label={`Detalhes de ${city.nome_municipio}`}
             >
               <Text fontSize="sm">{city.nome_municipio}</Text>
@@ -68,7 +77,7 @@ const CityList = ({ cities, cardTitle }) => {
       <CityDetailsModal
         isOpen={!!selectedCity}
         onClose={() => setSelectedCity(null)}
-        cityName={selectedCity}
+        cityName={selectedCity || ''} // Provide default empty string to satisfy string type
       />
     </>
   );

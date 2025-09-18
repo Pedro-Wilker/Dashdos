@@ -1,11 +1,17 @@
 import { VStack, Image, Spinner, Button } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import construcao from '../assets/construcao.png';
+import construcaoImg from "../../assets/construcao.png";
 
-const CartaTab = ({ setMode, setSelectedCity }) => {
+
+interface CartaTabProps {
+  setMode: (mode: any) => void;
+  setSelectedCity: (city: any) => void;
+}
+
+const CartaTab = ({ setMode, setSelectedCity }: CartaTabProps) => {
   return (
     <VStack h="100vh" justifyContent="center" alignItems="center" spacing={6}>
-      <Image src={construcao} alt="Em construção" maxW="50%" />
+      <Image src={construcaoImg} alt="Em construção" maxW="50%" />
       <Spinner
         thickness="4px"
         speed="0.65s"

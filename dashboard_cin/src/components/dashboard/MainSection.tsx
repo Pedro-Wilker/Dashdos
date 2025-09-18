@@ -20,8 +20,6 @@ import {
   VStack,
   Grid,
   GridItem,
-  List,
-  ListItem,
 } from '@chakra-ui/react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -36,23 +34,25 @@ import {
   LabelList,
 } from 'recharts';
 import { useRef, useState } from 'react';
+import { AxiosResponse } from 'axios';
 import html2canvas from 'html2canvas';
 import {
   getAmploGeral,
   getTopCities,
   getGeralMensal,
-  getCityDetails,
-} from '../services/api';
-import LoadingSpinner from './LoadingSpinner';
+} from '../../services/api';
+import { City, TopCity, MonthlyData, ApiResponse } from '../../types';
+import LoadingSpinner from '../common/LoadingSpinner';
 import BahiaMap from './BahiaMap';
+import CityDetails from '../common/CityDetails';
 
 const muiTheme = createTheme({
   palette: {
-    mode: 'light', 
+    mode: 'light',
   },
 });
 
-const monthNames = {
+const monthNames: { [key: string]: string } = {
   '01': 'Jan',
   '02': 'Fev',
   '03': 'Mar',
@@ -67,6 +67,23 @@ const monthNames = {
   '12': 'Dez',
 };
 
+const formatDate = (dateStr: string | undefined | null): string => {
+  if (!dateStr) return 'N/A';
+  const date = new Date(dateStr);
+  return isNaN(date.getTime())
+    ? 'N/A'
+    : `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}/${date.getFullYear()}`;
+};
+
+interface MainSectionData {
+  visits: (City & { NOME: string; daysLeft: number })[];
+  installations: (City & { NOME: string; daysLeft: number })[];
+  topCities: (TopCity & { NOME: string })[];
+  monthlyData: (MonthlyData & { month: string })[];
+}
+
 const MainSection = () => {
   const [width] = useWindowSize();
   const chartWidth = Math.min(width * 0.9, 500);
@@ -77,56 +94,56 @@ const MainSection = () => {
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const bgMain = useColorModeValue('#f5f5ef', 'gray.900');
 
-  const topCitiesRef = useRef(null);
-  const monthlyRef = useRef(null);
-  const [selectedCity, setSelectedCity] = useState(null); // Estado local para cidade selecionada
+  const topCitiesRef = useRef<HTMLDivElement>(null);
+  const monthlyRef = useRef<HTMLDivElement>(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<MainSectionData>({
     queryKey: ['mainSectionData'],
     queryFn: async () => {
       const [amploRes, topCitiesRes, mensalRes] = await Promise.all([
-        getAmploGeral(),
-        getTopCities({ ano: 2025, limit: 10 }),
-        getGeralMensal(),
+        getAmploGeral() as Promise<AxiosResponse<ApiResponse<City[]>>>,
+        getTopCities({ ano: 2025, limit: 10 }) as Promise<AxiosResponse<ApiResponse<TopCity[]>>>,
+        getGeralMensal() as Promise<AxiosResponse<ApiResponse<MonthlyData[]>>>,
       ]);
 
-      const amploData = Array.isArray(amploRes?.data) ? amploRes.data : [];
-      const topCitiesData = Array.isArray(topCitiesRes?.data) ? topCitiesRes.data : [];
-      const mensalData = Array.isArray(mensalRes?.data) ? mensalRes.data : [];
+      const amploData = Array.isArray(amploRes.data.data) ? amploRes.data.data : [];
+      const topCitiesData = Array.isArray(topCitiesRes.data.data) ? topCitiesRes.data.data : [];
+      const mensalData = Array.isArray(mensalRes.data.data) ? mensalRes.data.data : [];
 
-      const today = new Date('2025-09-10');
+      const today = new Date('2025-09-18');
       const sevenDaysFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
 
       const visits = amploData
         .filter(
-          (city) =>
+          (city: City) =>
             city?.data_visita &&
             new Date(city.data_visita) <= sevenDaysFromNow &&
             new Date(city.data_visita) >= today
         )
-        .map(city => ({
+        .map((city: City) => ({
           ...city,
           NOME: city.nome_municipio || 'Unknown',
-          daysLeft: Math.ceil((new Date(city.data_visita) - today) / (1000 * 60 * 60 * 24)),
+          daysLeft: Math.ceil((new Date(city.data_visita!).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)),
         }));
 
       const installations = amploData
         .filter(
-          (city) =>
+          (city: City) =>
             city?.data_instalacao &&
             new Date(city.data_instalacao) <= sevenDaysFromNow &&
             new Date(city.data_instalacao) >= today
         )
-        .map(city => ({
+        .map((city: City) => ({
           ...city,
           NOME: city.nome_municipio || 'Unknown',
-          daysLeft: Math.ceil((new Date(city.data_instalacao) - today) / (1000 * 60 * 60 * 24)),
+          daysLeft: Math.ceil((new Date(city.data_instalacao!).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)),
         }));
 
       const sortedMonthlyData = mensalData
         .slice()
-        .sort((a, b) => a.monthYear.localeCompare(b.monthYear))
-        .map(item => ({
+        .sort((a: MonthlyData, b: MonthlyData) => a.monthYear.localeCompare(b.monthYear))
+        .map((item: MonthlyData) => ({
           ...item,
           month: monthNames[item.monthYear?.split('-')[1]] || item.monthYear || 'Unknown',
           quantidade: item.quantidade || 0,
@@ -135,31 +152,24 @@ const MainSection = () => {
       return {
         visits,
         installations,
-        topCities: topCitiesData.map(city => ({
+        topCities: topCitiesData.map((city: TopCity) => ({
           ...city,
           NOME: city.nome_municipio || 'Unknown',
         })),
         monthlyData: sortedMonthlyData,
       };
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return 'N/A';
-    const date = new Date(dateStr);
-    return isNaN(date.getTime())
-      ? 'N/A'
-      : `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, '0')}/${date.getFullYear()}`;
-  };
-
-  const formatDays = (days) => {
+  const formatDays = (days: number | null): string => {
     if (days == null) return 'N/A';
     return days === 0 ? 'Hoje' : `Faltam ${days} dia${days > 1 ? 's' : ''}`;
   };
 
-  const downloadChart = async (ref, filename) => {
+  const downloadChart = async (ref: React.RefObject<HTMLDivElement>, filename: string) => {
     if (ref.current) {
       const canvas = await html2canvas(ref.current, { backgroundColor: null });
       const link = document.createElement('a');
@@ -170,11 +180,11 @@ const MainSection = () => {
   };
 
   if (isLoading) return <LoadingSpinner />;
-  if (error) return <Text color="red.500" fontSize="lg" textAlign="center">{error.message}</Text>;
+  if (error) return <Text color="red.500" fontSize="lg" textAlign="center">{(error as Error).message}</Text>;
 
   const { visits = [], installations = [], topCities = [], monthlyData = [] } = data || {};
 
-  const totalProd = monthlyData.reduce((sum, item) => sum + item.quantidade, 0);
+  const totalProd = monthlyData.reduce((sum: number, item: MonthlyData) => sum + item.quantidade, 0);
 
   const renderVisits = () => (
     <Box className="card-like" border="1px solid" borderColor={borderColor} borderRadius="lg" p={4} bg={bgSurface}>
@@ -193,7 +203,7 @@ const MainSection = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {visits.map((city) => (
+            {visits.map((city: City & { NOME: string; daysLeft: number }) => (
               <Tr key={city.id || city.NOME}>
                 <Td>{city.NOME || 'Unknown'}</Td>
                 <Td>{formatDate(city.data_visita)}</Td>
@@ -223,7 +233,7 @@ const MainSection = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {installations.map((city) => (
+            {installations.map((city: City & { NOME: string; daysLeft: number }) => (
               <Tr key={city.id || city.NOME}>
                 <Td>{city.NOME || 'Unknown'}</Td>
                 <Td>{formatDate(city.data_instalacao)}</Td>
@@ -243,35 +253,34 @@ const MainSection = () => {
     </VStack>
   );
 
-const renderMap = () => (
-    <Box className="card-like" border="1px solid" borderColor={borderColor} borderRadius="lg" p={4} bg={bgSurface} height="80vh" position="relative">
-      <Heading size="md" mb={2} fontWeight="extrabold" color={textFill}> {/* size="md" e mb={2} para padding mínimo */}
+  const renderMap = () => (
+    <Box className="card-like" border="1px solid" borderColor={borderColor} borderRadius="lg" p={4} bg={bgSurface} height={{ base: '60vh', md: '80vh' }} position="relative">
+      <Heading size="md" mb={2} fontWeight="extrabold" color={textFill}>
         Mapa da Bahia
       </Heading>
-      {/* Container otimizado: subtrai só heading (~30px) + padding extra (~10px) */}
-      <Box height="calc(100% - 10px)" width="100%" position="relative">
-        <BahiaMap 
-          isInteractive={true} 
-          highlightedCities={visits.map(city => city.NOME).concat(installations.map(city => city.NOME))} 
-          selectedCity={selectedCity} 
-          setSelectedCity={setSelectedCity} 
+      <Box height={{ base: 'calc(100% - 40px)', md: 'calc(100% - 30px)' }} width="100%" position="relative">
+        <BahiaMap
+          isInteractive={true}
+          highlightedCities={visits.map((city: City & { NOME: string }) => city.NOME).concat(installations.map((city: City & { NOME: string }) => city.NOME)).filter((city): city is string => city !== undefined)}
+          selectedCity={selectedCity}
+          setSelectedCity={setSelectedCity}
         />
       </Box>
-      {selectedCity && <CityDetailsSection cityName={selectedCity} />}
+      {selectedCity && <CityDetails cityName={selectedCity} />}
     </Box>
   );
 
-
   const renderTopCities = () => {
-    const sortedTopCities = topCities.slice().sort((a, b) => b.total_quantidade - a.total_quantidade);
+    const sortedTopCities = topCities.slice().sort((a: TopCity & { NOME: string }, b: TopCity & { NOME: string }) => b.total_quantidade - a.total_quantidade);
 
-    const abbreviateName = (name) => {
+    const abbreviateName = (name: string) => {
       if (!name || name === 'Unknown') return 'Unknown';
       return name.length > 6 ? `${name.slice(0, 3)}...` : name;
     };
 
-    const valueFormatter = (value) => {
-      const cityName = sortedTopCities.find(city => city.total_quantidade === value)?.NOME || 'Unknown';
+    const valueFormatter = (value: number | null): string => {
+      if (value === null) return 'N/A';
+      const cityName = sortedTopCities.find((city: TopCity & { NOME: string }) => city.total_quantidade === value)?.NOME || 'Unknown';
       return `Cidade: ${cityName}, Quantidade: ${value}`;
     };
 
@@ -287,7 +296,7 @@ const renderMap = () => (
             <ThemeProvider theme={muiTheme}>
               <BarChart
                 dataset={sortedTopCities}
-                yAxis={[{ scaleType: 'band', dataKey: 'NOME', tickFormatter: abbreviateName }]}
+                yAxis={[{ scaleType: 'band' as const, dataKey: 'NOME', valueFormatter: abbreviateName }]}
                 series={[{ dataKey: 'total_quantidade', label: 'Produção de CINs', valueFormatter }]}
                 layout="horizontal"
                 width={chartWidth}
@@ -317,8 +326,8 @@ const renderMap = () => (
                 <tr><th scope="col">Cidade</th><th scope="col">Quantidade</th></tr>
               </thead>
               <tbody>
-                {sortedTopCities.map(city => (
-                  <tr key={city.id || city.NOME}>
+                {sortedTopCities.map((city: TopCity & { NOME: string }) => (
+                  <tr key={city.nome_municipio}>
                     <td>{city.NOME || 'Unknown'}</td>
                     <td>{city.total_quantidade || 0}</td>
                   </tr>
@@ -351,18 +360,16 @@ const renderMap = () => (
             aria-label="Gráfico de barras da produção mensal de CINs"
           >
             <CartesianGrid stroke={gridStroke} strokeDasharray="3 3" />
-            <XAxis dataKey="month" stroke={textFill} fontSize={12} interval={0} /> {/* Show all months */}
+            <XAxis dataKey="month" stroke={textFill} fontSize={12} interval={0} />
             <YAxis stroke={textFill} fontSize={14} />
             <Tooltip
-            
               contentStyle={{ fontSize: '16px', fontWeight: '500', borderRadius: '8px', padding: '12px', backgroundColor: bgSurface, color: textFill }}
-              formatter={(value, name, props) => [`Mês: ${props.payload.month}, Quantidade: ${value}`]}
+              formatter={(value: number, name: string, props: any) => [`Mês: ${props.payload.month}, Quantidade: ${value}`]}
             />
             <Legend verticalAlign="top" height={36} />
             <Bar
               dataKey="quantidade"
               fill={chartFill}
-             
               radius={[8, 8, 0, 0]}
             >
               <LabelList dataKey="quantidade" position="top" fill={textFill} fontSize={14} />
@@ -383,7 +390,7 @@ const renderMap = () => (
               <tr><th scope="col">Mês</th><th scope="col">Quantidade</th></tr>
             </thead>
             <tbody>
-              {monthlyData.map((item, index) => (
+              {monthlyData.map((item: MonthlyData & { month: string }, index: number) => (
                 <tr key={index}>
                   <td>{item.month || 'Unknown'}</td>
                   <td>{item.quantidade || 0}</td>
@@ -403,11 +410,11 @@ const renderMap = () => (
         borderRadius="lg"
         boxShadow="sm"
         p={6}
-        width="90%"
+        width={{ base: '100%', md: '90%' }}
         mx="auto"
         color={textFill}
       >
-        <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={6}>
+        <Grid templateColumns={{ base: '1fr', md: '1fr 1fr', lg: '1fr 1fr' }} gap={6}>
           <GridItem>
             {visits.length === 0 && installations.length === 0 ? (
               renderMap()
@@ -432,34 +439,6 @@ const renderMap = () => (
           </GridItem>
         </Grid>
       </Box>
-    </Box>
-  );
-};
-
-const CityDetailsSection = ({ cityName }) => {
-  const { data: cityDetails, isLoading } = useQuery({
-    queryKey: ['cityDetails', cityName],
-    queryFn: () => getCityDetails(cityName),
-    enabled: !!cityName,
-  });
-
-  if (isLoading) return <Text>Carregando detalhes...</Text>;
-  if (!cityDetails || !cityDetails.data[0]) return <Text>Nenhum detalhe disponível para {cityName}.</Text>;
-
-  const details = cityDetails.data[0];
-
-  return (
-    <Box mt={4} p={4} bg="bg.surface" borderRadius="md" boxShadow="md">
-      <Heading size="md" mb={2}>Detalhes de {cityName}</Heading>
-      <List spacing={2}>
-        <ListItem><strong>Nome:</strong> {details.nome_municipio}</ListItem>
-        <ListItem><strong>Status Visita:</strong> {details.status_visita || 'N/A'}</ListItem>
-        <ListItem><strong>Status Publicação:</strong> {details.status_publicacao || 'N/A'}</ListItem>
-        <ListItem><strong>Status Instalação:</strong> {details.status_instalacao || 'N/A'}</ListItem>
-        <ListItem><strong>Data Visita:</strong> {details.data_visita || 'N/A'}</ListItem>
-        <ListItem><strong>Data Instalação:</strong> {details.data_instalacao || 'N/A'}</ListItem>
-        {/* Adicione mais campos conforme a resposta da API */}
-      </List>
     </Box>
   );
 };

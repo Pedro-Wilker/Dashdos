@@ -6,7 +6,17 @@ import CityList from './CityList';
 
 const MotionBox = motion(Box);
 
-const DashboardCard = ({ title, percentage, cities }) => {
+interface City {
+  nome_municipio: string;
+}
+
+interface DashboardCardProps {
+  title: string;
+  percentage: number | null; // Allow null
+  cities: City[] | null;
+}
+
+const DashboardCard = ({ title, percentage, cities }: DashboardCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const textColor = useColorModeValue('text._light', 'text._dark');
   const hoverShadow = useColorModeValue('lg', 'dark-lg');
@@ -17,6 +27,17 @@ const DashboardCard = ({ title, percentage, cities }) => {
 
   const handleDoubleClick = () => {
     setIsOpen(false);
+  };
+
+  // Helper function to render percentage
+  const renderPercentage = () => {
+    if (title === '343 Cidades') {
+      return '343';
+    }
+    if (percentage !== null && percentage !== undefined) {
+      return `${percentage}%`;
+    }
+    return 'N/A';
   };
 
   return (
@@ -42,11 +63,11 @@ const DashboardCard = ({ title, percentage, cities }) => {
       <VStack spacing={2}>
         <Text fontWeight="bold" fontSize="md">{title}</Text>
         <Text fontSize="xl" color="brand.500">
-          {title === '343 Cidades' ? '343' : `${percentage}%`}
+          {renderPercentage()}
         </Text>
         <Icon as={isOpen ? ChevronUpIcon : ChevronDownIcon} />
       </VStack>
-      {isOpen && cities && (
+      {isOpen && cities && cities.length > 0 && (
         <Box
           position="absolute"
           top="100%"
@@ -59,10 +80,26 @@ const DashboardCard = ({ title, percentage, cities }) => {
           p={2}
           maxH="300px"
           overflowY="auto"
-          onClick={(e) => e.stopPropagation()} // Impede bubbling para não toggle/fecha o card
-          onDoubleClick={(e) => e.stopPropagation()} // Impede bubbling para double click
+          onClick={(e) => e.stopPropagation()}
+          onDoubleClick={(e) => e.stopPropagation()}
         >
           <CityList cities={cities} cardTitle={title} />
+        </Box>
+      )}
+      {isOpen && (!cities || cities.length === 0) && (
+        <Box
+          position="absolute"
+          top="100%"
+          left="0"
+          width="100%"
+          bg="bg.surface"
+          boxShadow="md"
+          zIndex="10"
+          borderRadius="md"
+          p={2}
+          textAlign="center"
+        >
+          <Text>Nenhuma cidade disponível</Text>
         </Box>
       )}
     </MotionBox>

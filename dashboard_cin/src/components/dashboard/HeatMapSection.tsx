@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Box,
   Heading,
@@ -41,16 +41,35 @@ import {
   Area,
   ResponsiveContainer,
 } from 'recharts';
-import { getAmploGeral, getCityDetails, getTopAndLeastCities } from '../services/api';
+import { getAmploGeral, getCityDetails, getTopAndLeastCities } from '../../services/api';
 import html2canvas from 'html2canvas';
+import CityDetails from '../common/CityDetails';
+import { AxiosResponse } from 'axios';
+import { ApiResponse, City, TopAndLeastCitiesResponse, TopCity } from '../../types';
+
+// Define interfaces for data (aligned with types.ts)
+interface AmploData {
+  data: City[];
+  meta?: { count: number };
+}
+
+interface TopLeastData {
+  data: TopAndLeastCitiesResponse;
+  meta?: { count: number };
+}
+
+interface CityDetailsData {
+  data: City[];
+  meta?: { count: number };
+}
 
 const HeatMapSection = () => {
-  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
-  const mapRef = useRef(null);
-  const chartRef = useRef(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const itemsPerPage = 10;
   const textFill = useColorModeValue('#2e3d5aff', '#e2e8f0');
@@ -58,16 +77,22 @@ const HeatMapSection = () => {
   const borderColor = useColorModeValue('gray.200', 'gray.700');
 
   // Fetch dados gerais
-  const { data: amploData, isLoading, error } = useQuery({
+  const { data: amploData, isLoading, error } = useQuery<AmploData, Error>({
     queryKey: ['amploGeral'],
-    queryFn: () => getAmploGeral(),
+    queryFn: async () => {
+      const response: AxiosResponse<ApiResponse<City[]>> = await getAmploGeral();
+      return response.data; // Extract the data field from AxiosResponse
+    },
   });
 
-  // Fetch top/least cities - DESABILITADO TEMPORARIAMENTE para evitar erro; ative após fixar API
-  const { data: topLeastData } = useQuery({
+  // Fetch top/least cities
+  const { data: topLeastData } = useQuery<TopLeastData, Error>({
     queryKey: ['topAndLeastCities', 2025, 3],
-    queryFn: () => getTopAndLeastCities({ ano: 2025, limit: 3 }),
-    enabled: false, // Desabilita até API estar OK; remova para ativar
+    queryFn: async () => {
+      const response: AxiosResponse<ApiResponse<TopAndLeastCitiesResponse>> = await getTopAndLeastCities({ ano: 2025, limit: 3 });
+      return response.data;
+    },
+    enabled: false,
     retry: 3,
   });
 
@@ -88,7 +113,7 @@ const HeatMapSection = () => {
   }, []);
 
   // Determina status de maior prioridade
-  const getHighestPriorityStatus = (city) => {
+  const getHighestPriorityStatus = (city: City | undefined): string => {
     if (!city) return 'Não Informado';
     return (
       city.status_instalacao === 'instalado' ? 'Instalado' :
@@ -102,7 +127,7 @@ const HeatMapSection = () => {
   };
 
   // Mapa de cores por status
-  const statusColors = {
+  const statusColors: { [key: string]: string } = {
     'Não Informado': '#000000',
     Instalado: '#00FF00',
     'Ag. Instalação': '#FFFF00',
@@ -113,26 +138,42 @@ const HeatMapSection = () => {
   };
 
   // Paginação com guard
-  const allCities = amploData?.data || [];
-  const paginatedData = allCities.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const allCities: City[] = useMemo(() => {
+    return amploData?.data || [];
+  }, [amploData]);
+
+  const paginatedData = useMemo(() => {
+    return allCities.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  }, [allCities, currentPage]);
+
   const totalPages = Math.ceil(allCities.length / itemsPerPage);
 
   // Dados do carrossel com guard
-  const cityProduction = selectedCity ? allCities.find(c => c.nome_municipio === selectedCity)?.produtividades_diarias || [] : [];
-  const cityData = cityProduction.map(item => ({
-    month: new Date(item.data).toLocaleDateString('pt-BR', { month: 'short' }),
-    quantidade: item.quantidade || 0,
-  }));
+  const cityProduction = useMemo(() => {
+    return selectedCity ? allCities.find((c: City) => c.nome_municipio === selectedCity)?.produtividades_diarias || [] : [];
+  }, [selectedCity, allCities]);
 
-  // Dados para gráfico de área - GUARD ROBUSTO para .slice
-  const topLeastCitiesSafe = Array.isArray(topLeastData?.data) ? topLeastData.data : []; // Força array
-  const areaChartData = [
-    ...(selectedCity ? [{ name: selectedCity, quantidade: cityProduction.reduce((sum, p) => sum + (p.quantidade || 0), 0) }] : []),
-    ...(Array.isArray(topLeastCitiesSafe) && topLeastCitiesSafe.length > 0 ? topLeastCitiesSafe.slice(0, 1).map(city => ({ name: `${city.nome_municipio} (Top)`, quantidade: city.total_quantidade || 0 })) : []),
-    ...(Array.isArray(topLeastCitiesSafe) && topLeastCitiesSafe.length > 0 ? topLeastCitiesSafe.slice(-1).map(city => ({ name: `${city.nome_municipio} (Least)`, quantidade: city.total_quantidade || 0 })) : []),
-  ].filter(item => item.name && item.quantidade !== undefined);
+  const cityData = useMemo(() => {
+    return cityProduction.map((item: { data: string; quantidade: number }) => ({
+      month: new Date(item.data).toLocaleDateString('pt-BR', { month: 'short' }),
+      quantidade: item.quantidade || 0,
+    }));
+  }, [cityProduction]);
 
-  const downloadChart = async (ref, filename) => {
+  // Dados para gráfico de área
+  const topLeastCitiesSafe = useMemo(() => {
+    return topLeastData?.data ? [...(topLeastData.data.topCities || []), ...(topLeastData.data.leastCities || [])] : [];
+  }, [topLeastData]);
+
+  const areaChartData = useMemo(() => {
+    return [
+      ...(selectedCity ? [{ name: selectedCity, quantidade: cityProduction.reduce((sum: number, p: { quantidade: number }) => sum + (p.quantidade || 0), 0) }] : []),
+      ...(topLeastCitiesSafe.length > 0 ? topLeastCitiesSafe.slice(0, 1).map((city: TopCity) => ({ name: `${city.nome_municipio} (Top)`, quantidade: city.total_quantidade || 0 })) : []),
+      ...(topLeastCitiesSafe.length > 0 ? topLeastCitiesSafe.slice(-1).map((city: TopCity) => ({ name: `${city.nome_municipio} (Least)`, quantidade: city.total_quantidade || 0 })) : []),
+    ].filter((item: { name: string; quantidade: number }) => item.name && item.quantidade !== undefined);
+  }, [selectedCity, cityProduction, topLeastCitiesSafe]);
+
+  const downloadChart = async (ref: React.RefObject<HTMLDivElement>, filename: string) => {
     if (ref.current) {
       const canvas = await html2canvas(ref.current, { backgroundColor: null });
       const link = document.createElement('a');
@@ -142,11 +183,11 @@ const HeatMapSection = () => {
     }
   };
 
-  const downloadTable = (data, filename) => {
+  const downloadTable = (data: any[], filename: string) => {
     if (!Array.isArray(data) || data.length === 0) return;
     const csv = [
       Object.keys(data[0]).join(','),
-      ...data.map(row => Object.values(row).join(',')),
+      ...data.map((row: any) => Object.values(row).map(value => `"${value ?? ''}"`).join(',')),
     ].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const link = document.createElement('a');
@@ -168,7 +209,7 @@ const HeatMapSection = () => {
       mx="auto"
       width="90%"
       bg={bgSurface}
-      boxShadow="0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)" // Fix para warning de animation: valor CSS explícito
+      boxShadow="0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)"
     >
       <Heading size="lg" mb={4} color={textFill} textAlign="center">
         Mapa de Calor da Bahia
@@ -181,9 +222,9 @@ const HeatMapSection = () => {
           style={{ width: '100%', height: '100%', margin: '0 auto' }}
         >
           <Geographies geography="/bahia_municipios.json">
-            {({ geographies }) =>
-              geographies.map((geo) => {
-                const cityData = allCities.find(c => c.nome_municipio === geo.properties.NOME);
+            {({ geographies }: { geographies: any[] }) =>
+              geographies.map((geo: any) => {
+                const cityData = allCities.find((c: City) => c.nome_municipio === geo.properties.NOME);
                 const status = getHighestPriorityStatus(cityData);
                 return (
                   <Geography
@@ -208,7 +249,7 @@ const HeatMapSection = () => {
       <Box mb={4}>
         <Text fontSize="sm" color={textFill}>Legenda:</Text>
         <HStack spacing={4} justifyContent="center" wrap="wrap">
-          {Object.entries(statusColors).map(([status, color]) => (
+          {Object.entries(statusColors).map(([status, color]: [string, string]) => (
             <HStack key={status} spacing={2}>
               <Box w="15px" h="15px" bg={color} />
               <Text fontSize="sm">{status}</Text>
@@ -235,7 +276,7 @@ const HeatMapSection = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {paginatedData.map((city) => (
+                {paginatedData.map((city: City) => (
                   <Tr
                     key={city.id || city.nome_municipio}
                     onClick={() => {
@@ -243,7 +284,7 @@ const HeatMapSection = () => {
                       setModalOpen(true);
                     }}
                     cursor="pointer"
-                    _hover={{ bg: 'gray.50' }}
+                    _hover={{ bg: borderColor }}
                   >
                     <Td>{city.nome_municipio}</Td>
                     <Td>{getHighestPriorityStatus(city)}</Td>
@@ -264,7 +305,7 @@ const HeatMapSection = () => {
             </Table>
             <HStack justifyContent="center" mb={4}>
               <Button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
                 size="sm"
               >
@@ -272,7 +313,7 @@ const HeatMapSection = () => {
               </Button>
               <Text fontSize="sm">{currentPage} de {totalPages}</Text>
               <Button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
                 size="sm"
               >
@@ -360,7 +401,6 @@ const HeatMapSection = () => {
           </GridItem>
         </Grid>
       )}
-      {/* Modal Inline */}
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} size="xl">
         <ModalOverlay />
         <ModalContent>
@@ -376,15 +416,22 @@ const HeatMapSection = () => {
 };
 
 // Subcomponente para detalhes na seção expandida
-const CityDetailsSection = ({ cityName }) => {
-  const { data: cityDetails, isLoading } = useQuery({
+interface CityDetailsSectionProps {
+  cityName: string;
+}
+
+const CityDetailsSection = ({ cityName }: CityDetailsSectionProps) => {
+  const { data: cityDetails, isLoading } = useQuery<CityDetailsData, Error>({
     queryKey: ['cityDetails', cityName],
-    queryFn: () => getCityDetails(cityName),
+    queryFn: async () => {
+      const response: AxiosResponse<ApiResponse<City[]>> = await getCityDetails(cityName);
+      return response.data;
+    },
     enabled: !!cityName,
   });
 
   if (isLoading) return <Text>Carregando detalhes...</Text>;
-  if (!cityDetails || !cityDetails.data || cityDetails.data.length === 0) return <Text>Nenhum detalhe disponível.</Text>;
+  if (!cityDetails?.data || cityDetails.data.length === 0) return <Text>Nenhum detalhe disponível.</Text>;
 
   const details = cityDetails.data[0];
 
@@ -396,32 +443,39 @@ const CityDetailsSection = ({ cityName }) => {
         <ListItem><strong>Status Visita:</strong> {details.status_visita || 'N/A'}</ListItem>
         <ListItem><strong>Status Publicação:</strong> {details.status_publicacao || 'N/A'}</ListItem>
         <ListItem><strong>Status Instalação:</strong> {details.status_instalacao || 'N/A'}</ListItem>
-        <ListItem><strong>Data Visita:</strong> {details.data_visita || 'N/A'}</ListItem>
-        <ListItem><strong>Data Instalação:</strong> {details.data_instalacao || 'N/A'}</ListItem>
+        <ListItem><strong>Data Visita:</strong> {details.data_visita ?? 'N/A'}</ListItem>
+        <ListItem><strong>Data Instalação:</strong> {details.data_instalacao ?? 'N/A'}</ListItem>
       </List>
     </Box>
   );
 };
 
 // Subcomponente para modal
-const CityDetailsModal = ({ cityName }) => {
-  const { data: cityDetails, isLoading } = useQuery({
+interface CityDetailsModalProps {
+  cityName: string;
+}
+
+const CityDetailsModal = ({ cityName }: CityDetailsModalProps) => {
+  const { data: cityDetails, isLoading } = useQuery<CityDetailsData, Error>({
     queryKey: ['cityDetailsModal', cityName],
-    queryFn: () => getCityDetails(cityName),
+    queryFn: async () => {
+      const response: AxiosResponse<ApiResponse<City[]>> = await getCityDetails(cityName);
+      return response.data;
+    },
     enabled: !!cityName,
   });
 
   if (isLoading) return <Text>Carregando...</Text>;
-  if (!cityDetails || !cityDetails.data || cityDetails.data.length === 0) return <Text>Nenhum detalhe disponível.</Text>;
+  if (!cityDetails?.data || cityDetails.data.length === 0) return <Text>Nenhum detalhe disponível.</Text>;
 
   const details = cityDetails.data[0];
   const produtividades = details.produtividades_diarias || [];
 
-  const downloadTable = (data, filename) => {
+  const downloadTable = (data: any[], filename: string) => {
     if (!Array.isArray(data) || data.length === 0) return;
     const csv = [
       Object.keys(data[0]).join(','),
-      ...data.map(row => Object.values(row).join(',')),
+      ...data.map((row: any) => Object.values(row).map(value => `"${value ?? ''}"`).join(',')),
     ].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const link = document.createElement('a');
@@ -440,7 +494,7 @@ const CityDetailsModal = ({ cityName }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {produtividades.map((prod, index) => (
+          {produtividades.map((prod: { data: string; quantidade: number }, index: number) => (
             <Tr key={index}>
               <Td>{new Date(prod.data).toLocaleDateString('pt-BR')}</Td>
               <Td>{prod.quantidade || 0}</Td>
@@ -460,8 +514,8 @@ const CityDetailsModal = ({ cityName }) => {
         <ListItem><strong>Status Visita:</strong> {details.status_visita || 'N/A'}</ListItem>
         <ListItem><strong>Status Publicação:</strong> {details.status_publicacao || 'N/A'}</ListItem>
         <ListItem><strong>Status Instalação:</strong> {details.status_instalacao || 'N/A'}</ListItem>
-        <ListItem><strong>Data Visita:</strong> {details.data_visita || 'N/A'}</ListItem>
-        <ListItem><strong>Data Instalação:</strong> {details.data_instalacao || 'N/A'}</ListItem>
+        <ListItem><strong>Data Visita:</strong> {details.data_visita ?? 'N/A'}</ListItem>
+        <ListItem><strong>Data Instalação:</strong> {details.data_instalacao ?? 'N/A'}</ListItem>
       </List>
       <Button
         leftIcon={<DownloadIcon />}
