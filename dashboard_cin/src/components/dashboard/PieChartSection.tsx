@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
 import { Box, Heading, Flex, Text, Icon, useColorModeValue, Button } from '@chakra-ui/react';
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
 import { FaArrowDown } from 'react-icons/fa';
+import { PieChart } from '@mui/x-charts/PieChart';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CityList from './CityList';
 import {
   getStatusVisitaBreakdown,
@@ -20,17 +21,23 @@ import {
   StatusInstalacaoBreakdownResponse,
   City,
 } from '../../types';
+import { useWindowSize } from '@react-hook/window-size';
 
 const MotionBox = motion(Box);
 
-// Define interface for pie chart data
+const muiTheme = createTheme({
+  palette: {
+    mode: 'light', // Will be overridden by Chakra's color mode
+  },
+});
+
 interface PieData {
-  name: string;
+  id: number;
+  label: string;
   value: number;
   cities: City[];
 }
 
-// Define interface for combined API response data
 interface PieChartData {
   visitaRes: ApiResponse<StatusVisitaBreakdownResponse>;
   publicacaoRes: ApiResponse<StatusPublicacaoBreakdownResponse>;
@@ -41,17 +48,17 @@ const PieChartSection = () => {
   const [selectedCities, setSelectedCities] = useState<City[] | null>(null);
   const [selectedPie, setSelectedPie] = useState<string | null>(null);
   const [activeChart, setActiveChart] = useState<number>(1);
-  const gridStroke = useColorModeValue('#e2e8f0', '#4a5568');
-  const textFill = useColorModeValue('#1a202c', '#e2e8f0');
+  const [width] = useWindowSize();
+  const textFill = useColorModeValue('text._light', 'text._dark');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const bgSurface = useColorModeValue('white', 'gray.800');
-  const bgMain = useColorModeValue('#f5f5ef', 'gray.900');
+  const bgSurface = useColorModeValue('bg.main._light', 'bg.main._dark');
+  const bgMain = useColorModeValue('bg.main._light', 'bg.main._dark');
 
   const COLORS = [
-    useColorModeValue('#3182ce', '#63b3ed'),
-    useColorModeValue('#e53e3e', '#fc8181'),
-    useColorModeValue('#38a169', '#68d391'),
-    useColorModeValue('#d69e2e', '#f6e05e'),
+    useColorModeValue('brand.500', 'brand.200'),
+    useColorModeValue('red.500', 'red.300'),
+    useColorModeValue('green.500', 'green.300'),
+    useColorModeValue('yellow.500', 'yellow.300'),
   ];
 
   const visitaRef = useRef<HTMLDivElement>(null);
@@ -72,43 +79,42 @@ const PieChartSection = () => {
         instalacaoRes: instalacaoRes.data,
       };
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
-  const visitaData: { data: PieData[] } | null = data
-    ? {
-        data: [
-          { name: 'Aprovados', value: data.visitaRes.data.approvedPercentage, cities: data.visitaRes.data.approvedCities },
-          { name: 'Reprovados', value: data.visitaRes.data.rejectedPercentage, cities: data.visitaRes.data.rejectedCities },
-        ],
-      }
-    : null;
-
-  const publicacaoData: { data: PieData[] } | null = data
-    ? {
-        data: [
-          { name: 'Publicados', value: data.publicacaoRes.data.publishedPercentage, cities: data.publicacaoRes.data.publishedCities },
-          { name: 'Ag. Publicação', value: data.publicacaoRes.data.awaitingPercentage, cities: data.publicacaoRes.data.awaitingPublicationCities },
-        ],
-      }
-    : null;
-
-  const instalacaoData: { data: PieData[] } | null = data
-    ? {
-        data: [
-          { name: 'Instalados', value: data.instalacaoRes.data.installedPercentage, cities: data.instalacaoRes.data.installedCities },
-          { name: 'Ag. Instalação', value: data.instalacaoRes.data.awaitingPercentage, cities: data.instalacaoRes.data.awaitingInstallationCities },
-        ],
-      }
-    : null;
-
-  const handlePieClick = (data: { payload: PieData }) => {
-    setSelectedCities(data.payload.cities);
-    setSelectedPie(data.payload.name);
+  const isSmallScreen = width < 400;
+  const pieParams = {
+    width: isSmallScreen ? 300 : 400,
+    height: isSmallScreen ? 250 : 300,
+    innerRadius: isSmallScreen ? 40 : 0, // Donut style for small screens
+    outerRadius: isSmallScreen ? 80 : 100,
   };
 
-  const handlePieDoubleClick = (nextChart: number) => {
+  const visitaData: PieData[] | null = data
+    ? [
+      { id: 0, label: 'Aprovados', value: data.visitaRes.data.approvedPercentage, cities: data.visitaRes.data.approvedCities },
+      { id: 1, label: 'Reprovados', value: data.visitaRes.data.rejectedPercentage, cities: data.visitaRes.data.rejectedCities },
+    ]
+    : null;
+
+  const publicacaoData: PieData[] | null = data
+    ? [
+      { id: 0, label: 'Publicados', value: data.publicacaoRes.data.publishedPercentage, cities: data.publicacaoRes.data.publishedCities },
+      { id: 1, label: 'Ag. Publicação', value: data.publicacaoRes.data.awaitingPercentage, cities: data.publicacaoRes.data.awaitingPublicationCities },
+    ]
+    : null;
+
+  const instalacaoData: PieData[] | null = data
+    ? [
+      { id: 0, label: 'Instalados', value: data.instalacaoRes.data.installedPercentage, cities: data.instalacaoRes.data.installedCities },
+      { id: 1, label: 'Ag. Instalação', value: data.instalacaoRes.data.awaitingPercentage, cities: data.instalacaoRes.data.awaitingInstallationCities },
+    ]
+    : null;
+
+  const handlePieClick = (data: { id: number; label: string; value: number; cities: City[] }, nextChart: number) => {
+    setSelectedCities(data.cities);
+    setSelectedPie(data.label);
     if (activeChart < nextChart) {
       setActiveChart(nextChart);
     }
@@ -129,45 +135,50 @@ const PieChartSection = () => {
 
   const renderPie = (
     title: string,
-    data: { data: PieData[] } | null,
+    data: PieData[] | null,
     nextChart: number,
     chartRef: React.RefObject<HTMLDivElement>
   ) => (
     <Flex direction={{ base: 'column', md: 'row' }} alignItems="center" gap={6}>
-      <Box flex="1" ref={chartRef}>
+      <MotionBox
+        flex="1"
+        ref={chartRef}
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="pie-highlight"
+      >
         <Heading size="md" mb={4} color={textFill}>
           {title}
         </Heading>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Legend verticalAlign="top" height={36} />
-            <Pie
-              data={data?.data}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              label={({ name, value }) => `${name}: ${value}%`}
-              labelLine={{ stroke: gridStroke, strokeWidth: 2 }}
-              onClick={handlePieClick}
-              onDoubleClick={() => nextChart <= 3 && handlePieDoubleClick(nextChart)}
-              className="recharts-pie-sector"
-            >
-              {data?.data.map((_: PieData, index: number) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip
-              contentStyle={{ borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.2)', fontSize: '14px' }}
-              itemStyle={{ fontWeight: '500' }}
-              formatter={(value: number, name: string, props: any) => [
-                `${name}: ${value}%`,
-                `Cidades: ${props.payload.cities.map((c: City) => c.nome_municipio).join(', ')}`,
-              ]}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+        <ThemeProvider theme={muiTheme}>
+          <PieChart
+            series={[
+              {
+                data: data || [],
+                innerRadius: pieParams.innerRadius,
+                outerRadius: pieParams.outerRadius,
+                arcLabel: (item) => `${item.label}: ${item.value}%`,
+                arcLabelMinAngle: 20,
+                valueFormatter: (item) => `${item.label}: ${item.value}%`,
+                highlightScope: { fade: 'global', highlight: 'item' },
+                cx: '50%',
+                cy: '50%',
+              },
+            ]}
+            width={pieParams.width}
+            height={pieParams.height}
+            slotProps={{
+              legend: { position: { vertical: 'top', horizontal: 'center' } },
+            }}
+            onItemClick={(event, { dataIndex }) => data && handlePieClick(data[dataIndex], nextChart)}
+            sx={{
+              '& .MuiPieArc-root': { cursor: 'pointer' },
+              '& .MuiChartsAxis-tickLabel': { fill: textFill },
+              '& .MuiChartsLegend-root': { fill: textFill },
+            }}
+          />
+        </ThemeProvider>
         <Button
           mt={4}
           colorScheme="brand"
@@ -177,9 +188,9 @@ const PieChartSection = () => {
         >
           Baixar Gráfico
         </Button>
-      </Box>
+      </MotionBox>
       {selectedCities &&
-        selectedPie === data?.data.find((d: PieData) => d.cities === selectedCities)?.name && (
+        selectedPie === data?.find((d) => d.cities === selectedCities)?.label && (
           <Box flex="1" maxH={{ base: '300px', md: '400px' }} overflow="auto" minW={{ base: '100%', md: '300px' }}>
             <CityList cities={selectedCities} cardTitle={selectedPie} />
           </Box>
@@ -188,7 +199,7 @@ const PieChartSection = () => {
   );
 
   return (
-    <Box bg={bgMain} pt={10} pb={10} sx={{ backgroundColor: bgMain }}>
+    <Box bg={bgMain} pt={10} pb={10}>
       <Box
         width={{ base: '100%', md: '90%' }}
         mx="auto"
@@ -203,11 +214,7 @@ const PieChartSection = () => {
           Status das Visitas
         </Heading>
         <Flex direction="column" alignItems="center" gap={10}>
-          <MotionBox
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <MotionBox>
             {renderPie('Status das Visitas', visitaData, 2, visitaRef)}
           </MotionBox>
           {activeChart >= 2 && (

@@ -1,6 +1,6 @@
 export interface ApiResponse<T> {
   data: T;
-  meta?: { count: number }; // Make meta optional
+  meta?: { count: number };
 }
 
 export interface City {
@@ -26,6 +26,10 @@ export interface City {
     createAt: string;
     updateAt: string;
   }[];
+  IF_VISITAS?: string;
+  motivo?: string;
+  colaborador?: string;
+  populacao?: number;
 }
 
 export interface TopCity {
@@ -85,4 +89,12 @@ export interface ByCidadeResponse {
 export interface TopAndLeastCitiesResponse {
   topCities: TopCity[];
   leastCities: TopCity[];
+}
+
+export interface InstalledCityComparison {
+  nome_municipio: string;
+  total_quantidade: number;
+  populacao: number;
+  meta: number;
+  monthly_variation: number;
 }

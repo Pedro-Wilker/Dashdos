@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Button, Flex, Tabs, TabList, Tab, TabPanels, TabPanel } from '@chakra-ui/react';
-import CINTab from './CINTab';
-import CartaTab from './CartaTab';
+import CINTab from '../tab/CINTab';
+import CartaTab from '../tab/CartaTab';
 
 interface SlideshowProps {
   setMode: (mode: 'interativa' | 'slideshow' | null) => void;

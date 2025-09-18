@@ -1,148 +1,361 @@
+/* index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Define custom properties for MetricCard variants */
+:root {
+  --primary: #29C3FF; /* brand.500 */
+  --secondary: #4FC3F7; /* brand.400 */
+  --accent: #B1FF00; /* brand.300 */
+  --success: #38A169; /* chart.tertiary._light */
+  --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] {
+  --primary: #B1FF00; /* brand.300 */
+  --secondary: #4FC3F7; /* brand.400 */
+  --accent: #29C3FF; /* brand.500 */
+  --success: #68D391; /* chart.tertiary._dark */
+  --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Geral */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f7fafc;
+  background-color: var(--chakra-colors-bg-main);
 }
 
-/* Chakra UI Tabs Styling */
-.chakra-tabs__tablist {
-  margin-top: 16px;
-  display: flex;
-  justify-content: center;
+/* Card Styling */
+.card-like {
+  border: 1px solid var(--chakra-colors-border);
+  border-radius: var(--chakra-radii-lg);
+  padding: var(--chakra-space-md);
+  background: var(--chakra-colors-bg-surface);
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.chakra-tabs__tab {
+[data-theme="dark"] .card-like {
+  border-color: var(--chakra-colors-gray-600);
+  background: var(--chakra-colors-gray-800);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Sticky Header for Tables */
+.sticky-table {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.sticky-table thead th,
+.MuiTableContainer-root {
+  max-height: 440px;
+  overflow-y: auto;
+}
+
+.MuiTableHead-root {
+  position: sticky;
+  top: 0;
+  background: var(--chakra-colors-bg-surface);
+  z-index: 10;
+}
+
+[data-theme="dark"] .MuiTableHead-root {
+  background: var(--chakra-colors-gray-800);
+}
+
+.MuiTableCell-head {
+  font-weight: 600;
+  color: var(--chakra-colors-text-muted);
+  border-bottom: 1px solid var(--chakra-colors-border);
+}
+
+[data-theme="dark"] .MuiTableCell-head {
+  color: var(--chakra-colors-text-dark);
+  border-bottom-color: var(--chakra-colors-gray-600);
+}
+
+.MuiTableCell-body {
+  color: var(--chakra-colors-text-muted);
+}
+
+[data-theme="dark"] .MuiTableCell-body {
+  color: var(--chakra-colors-text-dark);
+}
+
+.MuiTableRow-root:hover {
+  background: var(--chakra-colors-gray-100);
+}
+
+[data-theme="dark"] .MuiTableRow-root:hover {
+  background: var(--chakra-colors-gray-600);
+}
+
+/* Donut Chart Animation */
+@keyframes donut-pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.donut-chart {
+  animation: donut-pulse 1.5s ease-in-out infinite;
+}
+
+/* MUI Tabs Styling */
+.MuiTabs-root {
+  margin-top: var(--chakra-space-md);
+}
+
+.MuiTab-root {
   text-transform: none;
   font-weight: 500;
-  font-size: 16px;
-  padding: 12px 16px;
-  transition: color 0.3s ease;
-  color: var(--chakra-colors-gray-600);
+  font-size: var(--chakra-fontSizes-md);
+  padding: var(--chakra-space-sm) var(--chakra-space-md);
+  color: var(--chakra-colors-text-muted);
+  transition: color 0.3s ease, background 0.3s ease;
 }
 
-.chakra-tabs__tab:hover {
+.MuiTab-root:hover {
   color: var(--chakra-colors-brand-500);
+  background: var(--chakra-colors-gray-100);
 }
 
-.chakra-tabs__tab[aria-selected='true'] {
+.Mui-selected {
   font-weight: 700;
-  color: var(--chakra-colors-brand-500);
+  color: var(--chakra-colors-brand-500) !important;
+  background: var(--chakra-colors-gray-50);
 }
 
-.chakra-tabs__tab-indicator {
+.MuiTabs-indicator {
   height: 3px;
   background-color: var(--chakra-colors-brand-500);
 }
 
-[data-theme=dark] .chakra-tabs__tab {
-  color: var(--chakra-colors-white);
+[data-theme="dark"] .MuiTab-root {
+  color: var(--chakra-colors-text-dark);
 }
 
-[data-theme=dark] .chakra-tabs__tab:hover {
+[data-theme="dark"] .MuiTab-root:hover {
   color: var(--chakra-colors-brand-300);
+  background: var(--chakra-colors-gray-700);
 }
 
-[data-theme=dark] .chakra-tabs__tab[aria-selected='true'] {
-  color: var(--chakra-colors-brand-300);
+[data-theme="dark"] .Mui-selected {
+  color: var(--chakra-colors-brand-300) !important;
+  background: var(--chakra-colors-gray-600);
 }
 
-[data-theme=dark] .chakra-tabs__tab-indicator {
+[data-theme="dark"] .MuiTabs-indicator {
   background-color: var(--chakra-colors-brand-300);
 }
 
 /* Recharts Styling */
 .recharts-tooltip-wrapper {
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background-color: var(--chakra-colors-whiteAlpha-900);
-  padding: 12px;
-  border: 1px solid var(--chakra-colors-gray-200);
+  border-radius: var(--chakra-radii-md);
+  box-shadow: var(--chakra-shadows-md);
+  background-color: var(--chakra-colors-bg-surface);
+  padding: var(--chakra-space-sm);
+  border: 1px solid var(--chakra-colors-border);
 }
 
-[data-theme=dark] .recharts-tooltip-wrapper {
+[data-theme="dark"] .recharts-tooltip-wrapper {
   background-color: var(--chakra-colors-gray-800);
   border-color: var(--chakra-colors-gray-600);
-  color: var(--chakra-colors-white);
+  color: var(--chakra-colors-text-dark);
 }
 
 .recharts-bar-rectangle {
   transition: all 0.3s ease;
-  fill-opacity: 0.9;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  fill-opacity: 1;
 }
 
 .recharts-bar-rectangle:hover {
-  fill-opacity: 1;
   transform: scale(1.02);
 }
 
 .recharts-area-curve {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
   stroke-linecap: round;
+  transition: all 0.3s ease;
+  fill-opacity: 1;
 }
 
-[data-theme=dark] .recharts-bar-rectangle,
-[data-theme=dark] .recharts-area-curve {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+[data-theme="dark"] .recharts-bar-rectangle,
+[data-theme="dark"] .recharts-area-curve {
+  filter: var(--chakra-shadows-dark-sm);
 }
 
 .recharts-legend-item-text {
   font-weight: 600;
-  font-size: 16px;
-  transition: color 0.3s ease;
+  font-size: var(--chakra-fontSizes-md);
 }
 
 .recharts-label {
-  font-size: 12px;
+  font-size: var(--chakra-fontSizes-sm);
   font-weight: 600;
-  fill: #1a1a1a;
+  fill: var(--chakra-colors-text-muted);
 }
 
-[data-theme=dark] .recharts-label {
-  fill: #e0e0e0;
+[data-theme="dark"] .recharts-label {
+  fill: var(--chakra-colors-text-dark);
 }
 
 .recharts-cartesian-grid {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
-/* City List and Card Styling */
+/* MUI Pie Chart Styling */
+.MuiChartsAxis-tickLabel {
+  font-size: var(--chakra-fontSizes-sm);
+  fill: var(--chakra-colors-text-muted);
+}
+
+[data-theme="dark"] .MuiChartsAxis-tickLabel {
+  fill: var(--chakra-colors-text-dark);
+}
+
+.MuiChartsLegend-root {
+  font-size: var(--chakra-fontSizes-md) !important;
+  font-weight: 600 !important;
+}
+
+.MuiPieArc-root {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.MuiPieArc-root:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+@keyframes pie-highlight {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.pie-highlight {
+  animation: pie-highlight 0.6s ease-in-out;
+}
+
+/* Mapa Styling */
+.map-geo {
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.map-geo:hover {
+  fill: var(--chakra-colors-brand-400);
+  cursor: pointer;
+}
+
+.map-geo.active {
+  fill: var(--chakra-colors-brand-500);
+  stroke: var(--chakra-colors-brand-600);
+  stroke-width: 1.5;
+}
+
+[data-theme="dark"] .map-geo:hover {
+  fill: var(--chakra-colors-brand-300);
+}
+
+[data-theme="dark"] .map-geo.active {
+  fill: var(--chakra-colors-brand-300);
+  stroke: var(--chakra-colors-brand-400);
+}
+
+/* City List Styling */
 .styled-city-list {
   background: var(--chakra-colors-bg-surface);
   border-radius: var(--chakra-radii-lg);
-  padding: var(--chakra-space-4);
+  padding: var(--chakra-space-md);
   box-shadow: var(--chakra-shadows-md);
   font-size: var(--chakra-fontSizes-md);
-  transition: background 0.3s ease;
 }
 
 .styled-city-list li {
-  padding: 8px;
-  border-radius: 4px;
-  transition: background 0.2s ease;
+  padding: var(--chakra-space-sm);
+  border-radius: var(--chakra-radii-sm);
 }
 
 .styled-city-list li:hover {
   background: var(--chakra-colors-gray-100);
 }
 
-[data-theme=dark] .styled-city-list li:hover {
+[data-theme="dark"] .styled-city-list li:hover {
   background: var(--chakra-colors-gray-600);
 }
 
-.card-like {
-  border: 1px solid var(--chakra-colors-gray-200);
-  border-radius: var(--chakra-radii-lg);
-  padding: var(--chakra-space-4);
-  background: var(--chakra-colors-bg-surface);
-  transition: all 0.3s ease;
+/* Sidebar Styling */
+.sidebar-nav-link:hover {
+  background: var(--chakra-colors-gray-100);
 }
 
-[data-theme=dark] .card-like {
-  border-color: var(--chakra-colors-gray-600);
-  background: var(--chakra-colors-gray-800);
+[data-theme="dark"] .sidebar-nav-link:hover {
+  background: var(--chakra-colors-gray-600);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .MuiTabs-root {
+    flex-wrap: wrap;
+    gap: var(--chakra-space-sm);
+  }
+
+  .MuiTab-root {
+    font-size: var(--chakra-fontSizes-sm);
+    padding: var(--chakra-space-xs) var(--chakra-space-sm);
+  }
+
+  .sticky-table,
+  .MuiTableContainer-root {
+    max-height: 300px;
+  }
+
+  .styled-city-list {
+    padding: var(--chakra-space-sm);
+  }
+
+  .card-like {
+    padding: var(--chakra-space-sm);
+  }
+
+  .MuiChartsLegend-root {
+    font-size: var(--chakra-fontSizes-sm) !important;
+  }
+
+  .sidebar-nav-link {
+    font-size: var(--chakra-fontSizes-sm);
+    padding: var(--chakra-space-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: var(--chakra-fontSizes-sm);
+  }
+
+  .MuiTabs-root {
+    margin-top: var(--chakra-space-sm);
+  }
+
+  .recharts-tooltip-wrapper,
+  .MuiChartsTooltip-root {
+    font-size: var(--chakra-fontSizes-xs);
+    padding: var(--chakra-space-xs);
+  }
+
+  .sticky-table,
+  .MuiTableContainer-root {
+    max-height: 200px;
+  }
+
+  .sidebar-nav-link {
+    font-size: var(--chakra-fontSizes-xs);
+    padding: var(--chakra-space-xs);
+  }
 }

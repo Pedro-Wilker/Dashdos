@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
 import { Box, Tooltip } from '@chakra-ui/react';
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 
 interface BahiaMapProps {
   isInteractive?: boolean;
@@ -37,61 +37,64 @@ const BahiaMap = memo(
     const scale = (dimensions.width / 800) * 4000;
 
     return (
-      <Box ref={mapRef} position="relative" overflow="hidden" height="100%" width="100%">
+      <Box
+        ref={mapRef}
+        position="relative"
+        overflow="hidden"
+        height="100%"
+        width="100%"
+        bg="brand.500"
+        borderRadius="md"
+        boxShadow="lg"
+        p="space.sm"
+      >
         <ComposableMap
           width={dimensions.width}
           height={dimensions.height}
-          projectionConfig={{ scale, center: [-42, -13] }}
           style={{ width: '100%', height: '100%' }}
         >
-          <Geographies geography="/bahia_municipios.json">
-            {({ geographies }: { geographies: GeographyType[] }) =>
-              geographies.map((geo) => {
-                const isSelected = selectedCity === geo.properties.NOME;
-                const isHighlighted = highlightedCities.includes(geo.properties.NOME);
-                return (
-                  <Tooltip
-                    key={geo.rsmKey}
-                    label={geo.properties.NOME}
-                    hasArrow
-                    placement="top"
-                    isOpen={hoveredCity === geo.properties.NOME}
-                  >
-                    <Geography
-                      geography={geo}
-                      fill={isSelected ? '#29C3FF' : isHighlighted ? '#B1FF00' : '#D7DBD9'}
-                      stroke="#000"
-                      strokeWidth={isSelected ? 1 : 0.5}
-                      onClick={() => isInteractive && setSelectedCity?.(geo.properties.NOME)}
-                      onMouseEnter={() => setHoveredCity(geo.properties.NOME)}
-                      onMouseLeave={() => setHoveredCity(null)}
-                      style={{
-                        default: { outline: 'none' },
-                        hover: { fill: '#29C3FF', outline: 'none' },
-                        pressed: { outline: 'none' },
-                      }}
-                      aria-label={`Município ${geo.properties.NOME}, ${isSelected ? 'selecionado' : isHighlighted ? 'destacado' : 'padrão'}`}
-                    />
-                  </Tooltip>
-                );
-              })
-            }
-          </Geographies>
-        </ComposableMap>
-        {selectedCity && (
-          <Box
-            position="absolute"
-            top="10px"
-            left="10px"
-            bg="bg.surface"
-            p={2}
-            borderRadius="md"
-            boxShadow="md"
-            zIndex={10}
+          <ZoomableGroup
+            center={[-42, -13]}
+            zoom={1}
+            minZoom={1}
+            maxZoom={5}
+            translateExtent={[[-1000, -1000], [1000, 1000]]}
           >
-            {selectedCity}
-          </Box>
-        )}
+            <Geographies geography="/bahia_municipios.json">
+              {({ geographies }: { geographies: GeographyType[] }) =>
+                geographies.map((geo) => {
+                  const isSelected = selectedCity === geo.properties.NOME;
+                  const isHighlighted = highlightedCities.includes(geo.properties.NOME);
+                  return (
+                    <Tooltip
+                      key={geo.rsmKey}
+                      label={geo.properties.NOME}
+                      hasArrow
+                      placement="top"
+                      isOpen={hoveredCity === geo.properties.NOME}
+                    >
+                      <Geography
+                        geography={geo}
+                        fill={isSelected ? '#29C3FF' : isHighlighted ? '#B1FF00' : '#D7DBD9'}
+                        stroke="#000"
+                        strokeWidth={isSelected ? 2 : 0.5}
+                        onClick={() => isInteractive && setSelectedCity?.(geo.properties.NOME)}
+                        onMouseEnter={() => setHoveredCity(geo.properties.NOME)}
+                        onMouseLeave={() => setHoveredCity(null)}
+                        style={{
+                          default: { outline: 'none' },
+                          hover: { fill: '#29C3FF', outline: 'none' },
+                          pressed: { fill: '#1A93CC', outline: 'none' },
+                        }}
+                        aria-label={`Município ${geo.properties.NOME}, ${isSelected ? 'selecionado' : isHighlighted ? 'destacado' : 'padrão'}`}
+                      />
+                    </Tooltip>
+                  );
+                })
+              }
+            </Geographies>
+          </ZoomableGroup>
+        </ComposableMap>
       </Box>
     );
   },

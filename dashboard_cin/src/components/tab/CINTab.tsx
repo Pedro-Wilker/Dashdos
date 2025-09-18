@@ -35,8 +35,8 @@ import {
   getVisitedCities,
 } from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
-import BahiaMap from './BahiaMap';
-import { useAppContext } from '../../AppContext'; 
+import BahiaMap from '../dashboard/BahiaMap';
+import { useAppContext } from '../../contexts/AppContext'; 
 import { AxiosResponse } from 'axios';
 import {
   MonthlyData,

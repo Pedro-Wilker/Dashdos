@@ -6,24 +6,22 @@ import {
   Button,
   VStack,
   HStack,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Grid,
-  GridItem,
-  List,
-  ListItem,
   useColorModeValue,
-  IconButton,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  IconButton,
+  List,
+  ListItem,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronUpIcon, DownloadIcon } from '@chakra-ui/icons';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
@@ -47,7 +45,6 @@ import CityDetails from '../common/CityDetails';
 import { AxiosResponse } from 'axios';
 import { ApiResponse, City, TopAndLeastCitiesResponse, TopCity } from '../../types';
 
-// Define interfaces for data (aligned with types.ts)
 interface AmploData {
   data: City[];
   meta?: { count: number };
@@ -66,22 +63,22 @@ interface CityDetailsData {
 const HeatMapSection = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<HTMLDivElement>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const itemsPerPage = 10;
   const textFill = useColorModeValue('#2e3d5aff', '#e2e8f0');
   const bgSurface = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const barColor = useColorModeValue('#3182ce', '#63b3ed');
+  const areaColor = useColorModeValue('#8884d8', '#a3bffa');
 
   // Fetch dados gerais
   const { data: amploData, isLoading, error } = useQuery<AmploData, Error>({
     queryKey: ['amploGeral'],
     queryFn: async () => {
       const response: AxiosResponse<ApiResponse<City[]>> = await getAmploGeral();
-      return response.data; // Extract the data field from AxiosResponse
+      return response.data;
     },
   });
 
@@ -137,18 +134,11 @@ const HeatMapSection = () => {
     Reprovado: '#FF0000',
   };
 
-  // Paginação com guard
+  // Dados do carrossel com guard
   const allCities: City[] = useMemo(() => {
     return amploData?.data || [];
   }, [amploData]);
 
-  const paginatedData = useMemo(() => {
-    return allCities.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  }, [allCities, currentPage]);
-
-  const totalPages = Math.ceil(allCities.length / itemsPerPage);
-
-  // Dados do carrossel com guard
   const cityProduction = useMemo(() => {
     return selectedCity ? allCities.find((c: City) => c.nome_municipio === selectedCity)?.produtividades_diarias || [] : [];
   }, [selectedCity, allCities]);
@@ -183,19 +173,6 @@ const HeatMapSection = () => {
     }
   };
 
-  const downloadTable = (data: any[], filename: string) => {
-    if (!Array.isArray(data) || data.length === 0) return;
-    const csv = [
-      Object.keys(data[0]).join(','),
-      ...data.map((row: any) => Object.values(row).map(value => `"${value ?? ''}"`).join(',')),
-    ].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${filename}.csv`;
-    link.click();
-  };
-
   if (isLoading) return <Text>Carregando...</Text>;
   if (error) return <Text color="red.500">{error.message}</Text>;
 
@@ -205,212 +182,144 @@ const HeatMapSection = () => {
       borderColor={borderColor}
       borderRadius="lg"
       p={6}
-      mt={6}
+      mt="space.xl"
+      mb="space.xl"
       mx="auto"
-      width="90%"
+      width={{ base: '100%', md: '90%' }}
       bg={bgSurface}
-      boxShadow="0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)"
+      boxShadow="var(--shadow-card)"
     >
-      <Heading size="lg" mb={4} color={textFill} textAlign="center">
-        Mapa de Calor da Bahia
-      </Heading>
-      <Box ref={mapRef} width="100%" textAlign="center" mb={4}>
-        <ComposableMap
-          width={dimensions.width}
-          height={dimensions.height}
-          projectionConfig={{ scale: (dimensions.width / 800) * 2800, center: [-42, -13] }}
-          style={{ width: '100%', height: '100%', margin: '0 auto' }}
-        >
-          <Geographies geography="/bahia_municipios.json">
-            {({ geographies }: { geographies: any[] }) =>
-              geographies.map((geo: any) => {
-                const cityData = allCities.find((c: City) => c.nome_municipio === geo.properties.NOME);
-                const status = getHighestPriorityStatus(cityData);
-                return (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    fill={statusColors[status] || '#000000'}
-                    stroke="#000"
-                    strokeWidth={0.5}
-                    onClick={() => setSelectedCity(geo.properties.NOME)}
-                    style={{
-                      default: { outline: 'none' },
-                      hover: { fill: '#29C3FF', outline: 'none' },
-                      pressed: { outline: 'none' },
-                    }}
-                  />
-                );
-              })
-            }
-          </Geographies>
-        </ComposableMap>
-      </Box>
-      <Box mb={4}>
-        <Text fontSize="sm" color={textFill}>Legenda:</Text>
-        <HStack spacing={4} justifyContent="center" wrap="wrap">
+      <VStack spacing="space.lg" align="stretch">
+        <Heading size="lg" color={textFill} textAlign="center">
+          Mapa de Calor da Bahia
+        </Heading>
+        <Box ref={mapRef} width="100%" textAlign="center">
+          <ComposableMap
+            width={dimensions.width}
+            height={dimensions.height}
+            projectionConfig={{ scale: (dimensions.width / 800) * 2800, center: [-42, -13] }}
+            style={{ width: '100%', height: '100%', margin: '0 auto' }}
+          >
+            <Geographies geography="/bahia_municipios.json">
+              {({ geographies }: { geographies: any[] }) =>
+                geographies.map((geo: any) => {
+                  const cityData = allCities.find((c: City) => c.nome_municipio === geo.properties.NOME);
+                  const status = getHighestPriorityStatus(cityData);
+                  return (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      fill={statusColors[status] || '#000000'}
+                      stroke="#000"
+                      strokeWidth={0.5}
+                      onClick={() => setSelectedCity(geo.properties.NOME)}
+                      style={{
+                        default: { outline: 'none' },
+                        hover: { fill: '#29C3FF', outline: 'none' },
+                        pressed: { outline: 'none' },
+                      }}
+                    />
+                  );
+                })
+              }
+            </Geographies>
+          </ComposableMap>
+        </Box>
+        <HStack spacing="space.md" justifyContent="center" wrap="wrap">
           {Object.entries(statusColors).map(([status, color]: [string, string]) => (
-            <HStack key={status} spacing={2}>
+            <HStack key={status} spacing="space.sm">
               <Box w="15px" h="15px" bg={color} />
               <Text fontSize="sm">{status}</Text>
             </HStack>
           ))}
         </HStack>
-      </Box>
-      <Button
-        onClick={() => setExpanded(!expanded)}
-        rightIcon={expanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
-        mb={4}
-      >
-        {expanded ? 'Recolher' : 'Expandir Detalhes'}
-      </Button>
-      {expanded && (
-        <Grid templateColumns={{ base: '1fr', md: '2fr 1fr' }} gap={6}>
-          <GridItem>
-            <Table variant="simple" mb={4}>
-              <Thead>
-                <Tr>
-                  <Th>Cidade</Th>
-                  <Th>Status</Th>
-                  <Th>Ações</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {paginatedData.map((city: City) => (
-                  <Tr
-                    key={city.id || city.nome_municipio}
-                    onClick={() => {
-                      setSelectedCity(city.nome_municipio);
-                      setModalOpen(true);
-                    }}
-                    cursor="pointer"
-                    _hover={{ bg: borderColor }}
-                  >
-                    <Td>{city.nome_municipio}</Td>
-                    <Td>{getHighestPriorityStatus(city)}</Td>
-                    <Td>
-                      <IconButton
-                        icon={<DownloadIcon />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          downloadTable([city], `city_${city.nome_municipio}`);
-                        }}
-                        size="sm"
-                        aria-label="Baixar dados da cidade"
-                      />
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-            <HStack justifyContent="center" mb={4}>
-              <Button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                size="sm"
-              >
-                Anterior
-              </Button>
-              <Text fontSize="sm">{currentPage} de {totalPages}</Text>
-              <Button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                size="sm"
-              >
-                Próximo
-              </Button>
-              <Button
-                leftIcon={<DownloadIcon />}
-                onClick={() => downloadTable(paginatedData, `cidades_pagina_${currentPage}`)}
-                size="sm"
-                variant="outline"
-              >
-                Baixar Página
-              </Button>
-            </HStack>
-          </GridItem>
-          <GridItem>
-            <VStack spacing={4} align="stretch">
-              {selectedCity && (
-                <Box ref={chartRef} mb={4}>
-                  {carouselIndex === 0 && cityData.length > 0 && (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <RechartsBarChart
-                        data={cityData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="quantidade" fill="#3182ce" radius={[8, 8, 0, 0]}>
-                          <LabelList dataKey="quantidade" position="top" />
-                        </Bar>
-                      </RechartsBarChart>
-                    </ResponsiveContainer>
-                  )}
-                  {carouselIndex === 1 && areaChartData.length > 0 && (
-                    <ResponsiveContainer width="100%" height={300}>
-                      <AreaChart data={areaChartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" angle={-45} textAnchor="end" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Area
-                          type="monotone"
-                          dataKey="quantidade"
-                          stroke="#8884d8"
-                          fill="#8884d8"
-                          fillOpacity={0.6}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  )}
-                  {carouselIndex === 1 && areaChartData.length === 0 && (
-                    <Text textAlign="center" color="gray.500">Dados de comparação não disponíveis (API offline).</Text>
-                  )}
-                  <HStack justifyContent="center" mt={2} spacing={2}>
-                    <IconButton
-                      icon={<ChevronDownIcon />}
-                      onClick={() => setCarouselIndex((prev) => (prev > 0 ? prev - 1 : 1))}
-                      aria-label="Gráfico Anterior"
-                      size="sm"
-                    />
-                    <Text fontSize="sm">Gráfico {carouselIndex + 1}/2</Text>
-                    <IconButton
-                      icon={<ChevronDownIcon transform="rotate(180deg)" />}
-                      onClick={() => setCarouselIndex((prev) => (prev < 1 ? prev + 1 : 0))}
-                      aria-label="Próximo Gráfico"
-                      size="sm"
-                    />
-                    <Button
-                      leftIcon={<DownloadIcon />}
-                      onClick={() => downloadChart(chartRef, `city_${selectedCity}_chart_${carouselIndex}`)}
-                      size="sm"
-                      variant="outline"
+        <Button
+          onClick={() => setExpanded(!expanded)}
+          rightIcon={expanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        >
+          {expanded ? 'Recolher' : 'Expandir Detalhes'}
+        </Button>
+        {expanded && (
+          <VStack spacing="space.lg" align="stretch">
+            {selectedCity && (
+              <Box ref={chartRef}>
+                {carouselIndex === 0 && cityData.length > 0 && (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <RechartsBarChart
+                      data={cityData}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                     >
-                      Baixar
-                    </Button>
-                  </HStack>
-                </Box>
-              )}
-              {selectedCity && <CityDetailsSection cityName={selectedCity} />}
-            </VStack>
-          </GridItem>
-        </Grid>
-      )}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} size="xl">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Detalhes de {selectedCity}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            {selectedCity && <CityDetailsModal cityName={selectedCity} />}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="month" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="quantidade" fill={barColor} radius={[8, 8, 0, 0]}>
+                        <LabelList dataKey="quantidade" position="top" />
+                      </Bar>
+                    </RechartsBarChart>
+                  </ResponsiveContainer>
+                )}
+                {carouselIndex === 1 && areaChartData.length > 0 && (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <AreaChart data={areaChartData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" angle={-45} textAnchor="end" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Area
+                        type="monotone"
+                        dataKey="quantidade"
+                        stroke={areaColor}
+                        fill={areaColor}
+                        fillOpacity={1}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
+                {carouselIndex === 1 && areaChartData.length === 0 && (
+                  <Text textAlign="center" color="gray.500">Dados de comparação não disponíveis (API offline).</Text>
+                )}
+                <HStack justifyContent="center" mt="space.sm" spacing="space.sm">
+                  <IconButton
+                    icon={<ChevronDownIcon />}
+                    onClick={() => setCarouselIndex((prev) => (prev > 0 ? prev - 1 : 1))}
+                    aria-label="Gráfico Anterior"
+                    size="sm"
+                  />
+                  <Text fontSize="sm">Gráfico {carouselIndex + 1}/2</Text>
+                  <IconButton
+                    icon={<ChevronDownIcon transform="rotate(180deg)" />}
+                    onClick={() => setCarouselIndex((prev) => (prev < 1 ? prev + 1 : 0))}
+                    aria-label="Próximo Gráfico"
+                    size="sm"
+                  />
+                  <Button
+                    leftIcon={<DownloadIcon />}
+                    onClick={() => downloadChart(chartRef, `city_${selectedCity}_chart_${carouselIndex}`)}
+                    size="sm"
+                    variant="outline"
+                  >
+                    Baixar
+                  </Button>
+                </HStack>
+              </Box>
+            )}
+            {selectedCity && <CityDetailsSection cityName={selectedCity} />}
+          </VStack>
+        )}
+        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} size={{ base: 'full', md: 'xl' }}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Detalhes de {selectedCity}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              {selectedCity && <CityDetailsModal cityName={selectedCity} />}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </VStack>
     </Box>
   );
 };
@@ -436,9 +345,9 @@ const CityDetailsSection = ({ cityName }: CityDetailsSectionProps) => {
   const details = cityDetails.data[0];
 
   return (
-    <Box p={4} bg="bg.surface" borderRadius="md" boxShadow="0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)">
-      <Heading size="md" mb={2}>Detalhes de {cityName}</Heading>
-      <List spacing={2}>
+    <Box p={4} bg="bg.surface" borderRadius="md" boxShadow="var(--shadow-card)">
+      <Heading size="md" mb="space.sm">Detalhes de {cityName}</Heading>
+      <List spacing="space.sm">
         <ListItem><strong>Nome:</strong> {details.nome_municipio}</ListItem>
         <ListItem><strong>Status Visita:</strong> {details.status_visita || 'N/A'}</ListItem>
         <ListItem><strong>Status Publicação:</strong> {details.status_publicacao || 'N/A'}</ListItem>
@@ -485,7 +394,7 @@ const CityDetailsModal = ({ cityName }: CityDetailsModalProps) => {
   };
 
   return (
-    <VStack spacing={4} align="stretch">
+    <VStack spacing="space.lg" align="stretch">
       <Table variant="simple">
         <Thead>
           <Tr>
@@ -509,7 +418,7 @@ const CityDetailsModal = ({ cityName }: CityDetailsModalProps) => {
       >
         Baixar Tabela de Produtividades
       </Button>
-      <List spacing={2}>
+      <List spacing="space.sm">
         <ListItem><strong>Nome:</strong> {details.nome_municipio}</ListItem>
         <ListItem><strong>Status Visita:</strong> {details.status_visita || 'N/A'}</ListItem>
         <ListItem><strong>Status Publicação:</strong> {details.status_publicacao || 'N/A'}</ListItem>

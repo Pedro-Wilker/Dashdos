@@ -37,13 +37,17 @@ const CityList = ({ cities, cardTitle }: CityListProps) => {
         className="styled-city-list"
         color={textColor}
         aria-label={`Lista de cidades para ${cardTitle}`}
+        bg="bg.main"
+        borderRadius="md"
+        p="space.md"
+        boxShadow="md"
       >
-        <List spacing={2} p={4}>
+        <List spacing="space.sm">
           {visibleCities.map((city: City, index: number) => (
             <ListItem
               key={index}
-              p={2}
-              borderRadius="md"
+              p="space.sm"
+              borderRadius="sm"
               _hover={{ bg: hoverBg }}
               cursor="pointer"
               onClick={() => setSelectedCity(city.nome_municipio)}
@@ -53,14 +57,17 @@ const CityList = ({ cities, cardTitle }: CityListProps) => {
             </ListItem>
           ))}
           {cities.length > 10 && (
-            <ListItem>
+            <ListItem position="relative">
               <Text fontSize="sm">...</Text>
               <Button
                 size="sm"
                 colorScheme="brand"
-                mt={2}
+                mt="space.sm"
                 onClick={() => setIsModalOpen(true)}
                 aria-label={`Ver mais cidades para ${cardTitle}`}
+                position="relative"
+                zIndex={1}
+                width="full"
               >
                 Ver Mais
               </Button>
@@ -77,7 +84,7 @@ const CityList = ({ cities, cardTitle }: CityListProps) => {
       <CityDetailsModal
         isOpen={!!selectedCity}
         onClose={() => setSelectedCity(null)}
-        cityName={selectedCity || ''} // Provide default empty string to satisfy string type
+        cityName={selectedCity || ''}
       />
     </>
   );
