@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Drawer,
   DrawerBody,
@@ -20,17 +20,12 @@ import {
   AccordionIcon,
 } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
-import {
-  PresentationChartBarIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import logoClaro from '../../assets/logo_claro.png';
 import logoEscuro from '../../assets/logo_escuro.png';
 import { ChevronRightIcon } from '@chakra-ui/icons';
+import { routes } from '../../routes';
+import './styles/Sidebar.css';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -44,31 +39,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const logo = useColorModeValue(logoClaro, logoEscuro);
 
-  // Placeholder for search functionality (to be integrated with useCitySearch.ts)
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     // Integrate with useCitySearch.ts hook here
   };
-
-  const routes = [
-    { path: '/cin', label: 'Cin em Todo Lugar', icon: PresentationChartBarIcon, subItems: [
-      { path: '/cin/analytics', label: 'Analytics' },
-      { path: '/cin/reporting', label: 'Reporting' },
-      { path: '/cin/projects', label: 'Projects' },
-    ]},
-    { path: '/admin', label: 'ADMIN', icon: UserCircleIcon },
-    { path: '/diretoria', label: 'DIRETORIA', icon: Cog6ToothIcon },
-    { path: '/sac', label: 'SAC', icon: InboxIcon },
-    { path: '/carta', label: 'CARTA', icon: InboxIcon },
-    { path: '/articulacao', label: 'ARTICULAÇÃO', icon: InboxIcon },
-    { path: '/nga', label: 'NGA', icon: InboxIcon },
-    { path: '/pontos', label: 'PONTOS', icon: InboxIcon },
-    { path: '/capital', label: 'CAPITAL', icon: InboxIcon },
-    { path: '/interior', label: 'INTERIOR', icon: InboxIcon },
-    { path: '/nud', label: 'NUD', icon: InboxIcon },
-    { path: '/movel', label: 'MÓVEL', icon: InboxIcon },
-    { path: '/logout', label: 'Log Out', icon: PowerIcon },
-  ];
 
   return (
     <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -82,6 +56,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         boxShadow="xl"
         borderRight="1px"
         borderColor={borderColor}
+        className="sidebar-content"
       >
         <DrawerCloseButton aria-label="Fechar menu de navegação" color={textColor} />
         <DrawerHeader p={4} display="flex" alignItems="center" gap={4} borderBottom="none">
@@ -106,7 +81,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </InputGroup>
           <VStack as="nav" spacing={0} align="stretch">
             <Accordion allowToggle>
-              {routes.map((route, index) => (
+              {routes.map((route) => (
                 route.subItems ? (
                   <AccordionItem key={route.path} border="none">
                     <AccordionButton
@@ -125,7 +100,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       }}
                     >
                       <Box display="flex" alignItems="center" gap={3} flex="1">
-                        <route.icon className="h-5 w-5" style={{ color: textColor }} />
+                        {route.icon && <route.icon className="h-5 w-5" style={{ color: textColor }} />}
                         <Text fontSize="md" color={textColor} flex="1" textAlign="left">
                           {route.label}
                         </Text>
@@ -185,7 +160,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       },
                     }}
                   >
-                    <route.icon className="h-5 w-5" style={{ color: textColor }} />
+                    {route.icon && <route.icon className="h-5 w-5" style={{ color: textColor }} />}
                     {route.label}
                   </Box>
                 )

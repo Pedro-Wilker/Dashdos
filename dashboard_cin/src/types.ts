@@ -98,3 +98,9 @@ export interface InstalledCityComparison {
   meta: number;
   monthly_variation: number;
 }
+
+// Add Column interface for CityTable
+export interface Column {
+  key: Exclude<keyof City, 'produtividades_diarias'> | 'produtividade_total';
+  label: string;
+}

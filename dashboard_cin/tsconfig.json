@@ -1,45 +1,18 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
+    "moduleResolution": "node",
     "jsx": "react-jsx",
-    "types": [
-      "node",
-      "vite/client",
-      "react",
-      "react-dom",
-      "react-simple-maps",
-      "react-window",
-      "react-transition-group",
-      "prop-types",
-      "geojson",
-      "d3-color",
-      "d3-delaunay",
-      "d3-geo",
-      "d3-interpolate",
-      "d3-path",
-      "d3-shape",
-      "d3-time",
-      "d3-timer",
-      "parse-json",
-      "babel__core",
-      "babel__generator",
-      "babel__template",
-      "babel__traverse"
-    ]
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

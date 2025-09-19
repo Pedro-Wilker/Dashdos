@@ -1,0 +1,22 @@
+.interactive-page {
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-cards-section {
+  margin-top: var(--chakra-space-xl);
+  margin-bottom: var(--chakra-space-xl);
+}
+
+.back-button {
+  margin-top: var(--chakra-space-xl);
+  margin-bottom: var(--chakra-space-xl);
+}
+
+@media (max-width: 768px) {
+  .dashboard-cards-section,
+  .back-button {
+    margin-top: var(--chakra-space-lg);
+    margin-bottom: var(--chakra-space-lg);
+  }
+}

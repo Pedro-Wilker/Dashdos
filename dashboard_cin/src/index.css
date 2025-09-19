@@ -1,9 +1,16 @@
-/* index.css */
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Define custom properties for MetricCard variants */
+/* Global Resets */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--chakra-colors-bg-main);
+}
+
+/* Theme Variables */
 :root {
   --primary: #29C3FF; /* brand.500 */
   --secondary: #4FC3F7; /* brand.400 */
@@ -22,13 +29,6 @@
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
 }
 
-/* Geral */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: var(--chakra-colors-bg-main);
-}
-
 /* Card Styling */
 .card-like {
   border: 1px solid var(--chakra-colors-border);
@@ -44,115 +44,6 @@ body {
   border-color: var(--chakra-colors-gray-600);
   background: var(--chakra-colors-gray-800);
   box-shadow: var(--shadow-lg);
-}
-
-/* Sticky Header for Tables */
-.sticky-table {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.sticky-table thead th,
-.MuiTableContainer-root {
-  max-height: 440px;
-  overflow-y: auto;
-}
-
-.MuiTableHead-root {
-  position: sticky;
-  top: 0;
-  background: var(--chakra-colors-bg-surface);
-  z-index: 10;
-}
-
-[data-theme="dark"] .MuiTableHead-root {
-  background: var(--chakra-colors-gray-800);
-}
-
-.MuiTableCell-head {
-  font-weight: 600;
-  color: var(--chakra-colors-text-muted);
-  border-bottom: 1px solid var(--chakra-colors-border);
-}
-
-[data-theme="dark"] .MuiTableCell-head {
-  color: var(--chakra-colors-text-dark);
-  border-bottom-color: var(--chakra-colors-gray-600);
-}
-
-.MuiTableCell-body {
-  color: var(--chakra-colors-text-muted);
-}
-
-[data-theme="dark"] .MuiTableCell-body {
-  color: var(--chakra-colors-text-dark);
-}
-
-.MuiTableRow-root:hover {
-  background: var(--chakra-colors-gray-100);
-}
-
-[data-theme="dark"] .MuiTableRow-root:hover {
-  background: var(--chakra-colors-gray-600);
-}
-
-/* Donut Chart Animation */
-@keyframes donut-pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.donut-chart {
-  animation: donut-pulse 1.5s ease-in-out infinite;
-}
-
-/* MUI Tabs Styling */
-.MuiTabs-root {
-  margin-top: var(--chakra-space-md);
-}
-
-.MuiTab-root {
-  text-transform: none;
-  font-weight: 500;
-  font-size: var(--chakra-fontSizes-md);
-  padding: var(--chakra-space-sm) var(--chakra-space-md);
-  color: var(--chakra-colors-text-muted);
-  transition: color 0.3s ease, background 0.3s ease;
-}
-
-.MuiTab-root:hover {
-  color: var(--chakra-colors-brand-500);
-  background: var(--chakra-colors-gray-100);
-}
-
-.Mui-selected {
-  font-weight: 700;
-  color: var(--chakra-colors-brand-500) !important;
-  background: var(--chakra-colors-gray-50);
-}
-
-.MuiTabs-indicator {
-  height: 3px;
-  background-color: var(--chakra-colors-brand-500);
-}
-
-[data-theme="dark"] .MuiTab-root {
-  color: var(--chakra-colors-text-dark);
-}
-
-[data-theme="dark"] .MuiTab-root:hover {
-  color: var(--chakra-colors-brand-300);
-  background: var(--chakra-colors-gray-700);
-}
-
-[data-theme="dark"] .Mui-selected {
-  color: var(--chakra-colors-brand-300) !important;
-  background: var(--chakra-colors-gray-600);
-}
-
-[data-theme="dark"] .MuiTabs-indicator {
-  background-color: var(--chakra-colors-brand-300);
 }
 
 /* Recharts Styling */
@@ -243,93 +134,11 @@ body {
   animation: pie-highlight 0.6s ease-in-out;
 }
 
-/* Mapa Styling */
-.map-geo {
-  transition: fill 0.3s ease, stroke 0.3s ease;
-}
-
-.map-geo:hover {
-  fill: var(--chakra-colors-brand-400);
-  cursor: pointer;
-}
-
-.map-geo.active {
-  fill: var(--chakra-colors-brand-500);
-  stroke: var(--chakra-colors-brand-600);
-  stroke-width: 1.5;
-}
-
-[data-theme="dark"] .map-geo:hover {
-  fill: var(--chakra-colors-brand-300);
-}
-
-[data-theme="dark"] .map-geo.active {
-  fill: var(--chakra-colors-brand-300);
-  stroke: var(--chakra-colors-brand-400);
-}
-
-/* City List Styling */
-.styled-city-list {
-  background: var(--chakra-colors-bg-surface);
-  border-radius: var(--chakra-radii-lg);
-  padding: var(--chakra-space-md);
-  box-shadow: var(--chakra-shadows-md);
-  font-size: var(--chakra-fontSizes-md);
-}
-
-.styled-city-list li {
-  padding: var(--chakra-space-sm);
-  border-radius: var(--chakra-radii-sm);
-}
-
-.styled-city-list li:hover {
-  background: var(--chakra-colors-gray-100);
-}
-
-[data-theme="dark"] .styled-city-list li:hover {
-  background: var(--chakra-colors-gray-600);
-}
-
-/* Sidebar Styling */
-.sidebar-nav-link:hover {
-  background: var(--chakra-colors-gray-100);
-}
-
-[data-theme="dark"] .sidebar-nav-link:hover {
-  background: var(--chakra-colors-gray-600);
-}
-
 /* Media Queries */
 @media (max-width: 768px) {
-  .MuiTabs-root {
-    flex-wrap: wrap;
-    gap: var(--chakra-space-sm);
-  }
-
-  .MuiTab-root {
-    font-size: var(--chakra-fontSizes-sm);
-    padding: var(--chakra-space-xs) var(--chakra-space-sm);
-  }
-
-  .sticky-table,
-  .MuiTableContainer-root {
-    max-height: 300px;
-  }
-
-  .styled-city-list {
-    padding: var(--chakra-space-sm);
-  }
-
-  .card-like {
-    padding: var(--chakra-space-sm);
-  }
-
-  .MuiChartsLegend-root {
-    font-size: var(--chakra-fontSizes-sm) !important;
-  }
-
-  .sidebar-nav-link {
-    font-size: var(--chakra-fontSizes-sm);
+  .recharts-tooltip-wrapper,
+  .MuiChartsTooltip-root {
+    font-size: var(--chakra-fontSizes-xs);
     padding: var(--chakra-space-xs);
   }
 }
@@ -337,25 +146,5 @@ body {
 @media (max-width: 480px) {
   body {
     font-size: var(--chakra-fontSizes-sm);
-  }
-
-  .MuiTabs-root {
-    margin-top: var(--chakra-space-sm);
-  }
-
-  .recharts-tooltip-wrapper,
-  .MuiChartsTooltip-root {
-    font-size: var(--chakra-fontSizes-xs);
-    padding: var(--chakra-space-xs);
-  }
-
-  .sticky-table,
-  .MuiTableContainer-root {
-    max-height: 200px;
-  }
-
-  .sidebar-nav-link {
-    font-size: var(--chakra-fontSizes-xs);
-    padding: var(--chakra-space-xs);
   }
 }

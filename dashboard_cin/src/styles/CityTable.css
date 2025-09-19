@@ -1,0 +1,81 @@
+.sticky-table {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.MuiTableContainer-root {
+  max-height: 440px;
+  overflow-y: auto;
+}
+
+.MuiTableHead-root {
+  position: sticky;
+  top: 0;
+  background: var(--chakra-colors-bg-surface);
+  z-index: 10;
+}
+
+[data-theme="dark"] .MuiTableHead-root {
+  background: var(--chakra-colors-gray-800);
+}
+
+.MuiTableCell-head {
+  font-weight: 600;
+  color: var(--chakra-colors-text-muted);
+  border-bottom: 1px solid var(--chakra-colors-border);
+}
+
+[data-theme="dark"] .MuiTableCell-head {
+  color: var(--chakra-colors-text-dark);
+  border-bottom-color: var(--chakra-colors-gray-600);
+}
+
+.MuiTableCell-body {
+  color: var(--chakra-colors-text-muted);
+}
+
+[data-theme="dark"] .MuiTableCell-body {
+  color: var(--chakra-colors-text-dark);
+}
+
+.MuiTableRow-root:hover {
+  background: var(--chakra-colors-gray-100);
+}
+
+[data-theme="dark"] .MuiTableRow-root:hover {
+  background: var(--chakra-colors-gray-600);
+}
+
+@media (max-width: 768px) {
+  .sticky-table,
+  .MuiTableContainer-root {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sticky-table,
+  .MuiTableContainer-root {
+    max-height: 200px;
+  }
+
+  .MuiTableCell-root:nth-of-type(3),
+  .MuiTableCell-root:nth-of-type(4),
+  .MuiTableCell-root:nth-of-type(5),
+  .MuiTableCell-root:nth-of-type(6),
+  .MuiTableCell-root:nth-of-type(7) {
+    display: none;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .MuiTableCell-root {
+    font-size: var(--chakra-fontSizes-sm);
+    padding: var(--chakra-space-sm);
+  }
+
+  .MuiTableCell-root:nth-of-type(5),
+  .MuiTableCell-root:nth-of-type(6) {
+    display: none;
+  }
+}

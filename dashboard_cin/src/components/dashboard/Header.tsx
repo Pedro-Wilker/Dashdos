@@ -15,6 +15,7 @@ import Sidebar from './Sidebar';
 import logoClaro from '../../assets/logo_claro.png';
 import logoEscuro from '../../assets/logo_escuro.png';
 import logoSac from '../../assets/logo_sac.png';
+import './styles/Header.css';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,6 +52,7 @@ const Header = () => {
         borderBottom="1px solid"
         borderColor={useColorModeValue('gray.200', 'gray.700')}
         transition="background-color 0.3s ease"
+        className="header"
       >
         <Flex align="center" justify="space-between" h="full" px="space.lg" maxW="container.xl" mx="auto">
           <Flex align="center" gap={{ base: 'space.xs', md: 'space.sm' }}>

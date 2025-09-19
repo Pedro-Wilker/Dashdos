@@ -1,70 +1,58 @@
-import { extendTheme } from '@chakra-ui/react';
+import { extendTheme } from '@chakra-ui/react'; 
 
 const theme = extendTheme({
   colors: {
-    bg: {
-      main: {
-        _light: '#F5F5EF',
-        _dark: 'gray.900',
-      },
-      surface: {
-        _light: '#F5F5EF',
-        _dark: 'gray.800',
-      },
-    },
-    text: {
-      _light: 'gray.800',
-      _dark: 'white',
-      muted: {
-        _light: 'gray.600',
-        _dark: 'gray.300',
-      },
-    },
     brand: {
-      100: '#E6F7FF',
-      200: '#B3E5FC',
+      50: '#E6F3FF',
+      100: '#B3DFFF',
+      200: '#80CCFF',
       300: '#B1FF00',
       400: '#4FC3F7',
       500: '#29C3FF',
-      600: '#039BE5',
+      600: '#0097CC',
+      700: '#006D99',
+      800: '#004466',
+      900: '#002233',
+    },
+    bg: {
+      main: {
+        _light: '#F5F5EF',
+        _dark: '#1A202C',
+      },
+      card: {
+        _light: '#FFFFFF',
+        _dark: '#2D3748',
+      },
+      surface: {
+        _light: '#FFFFFF',
+        _dark: '#2D3748',
+      },
+    },
+    text: {
+      _light: '#1A202C',
+      _dark: '#E2E8F0',
+      muted: {
+        _light: '#4A5568',
+        _dark: '#A0AEC0',
+      },
     },
     chart: {
       primary: {
-        _light: '#3182CE',
-        _dark: '#63B3ED',
+        _light: '#29C3FF',
+        _dark: '#B1FF00',
       },
       secondary: {
-        _light: '#E53E3E',
-        _dark: '#FC8181',
+        _light: '#B1FF00',
+        _dark: '#29C3FF',
       },
       tertiary: {
         _light: '#38A169',
         _dark: '#68D391',
       },
-      quaternary: {
-        _light: '#D69E2E',
-        _dark: '#F6E05E',
-      },
-    },
-    map: {
-      highlight: {
-        _light: '#29C3FF',
-        _dark: '#B1FF00',
-      },
-      active: {
-        _light: '#0288D1',
-        _dark: '#8BC34A',
-      },
-    },
-    button: {
-      primary: {
-        _light: '#29C3FF',
-        _dark: '#B1FF00',
-      },
     },
     border: {
-      _light: 'gray.200',
-      _dark: 'gray.600',
+      _light: '#E2E8F0',
+      _dark: '#4A5568',
     },
   },
   space: {
@@ -75,42 +63,24 @@ const theme = extendTheme({
     xl: '32px',
   },
   fontSizes: {
-    xs: '12px',
-    sm: '14px',
-    md: '16px',
-    lg: '18px',
-    xl: '20px',
-  },
-  shadows: {
-    sm: '0 2px 4px rgba(0,0,0,0.1)',
-    md: '0 4px 6px rgba(0,0,0,0.1)',
-    dark: {
-      sm: '0 2px 4px rgba(0,0,0,0.3)',
-      md: '0 4px 6px rgba(0,0,0,0.3)',
-    },
+    xs: '0.75rem',
+    sm: '0.875rem',
+    md: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
   },
   radii: {
     sm: '4px',
-    md: '8px',
-    lg: '12px',
+    md: '6px',
+    lg: '8px',
   },
-  components: {
-    Button: {
-      baseStyle: {
-        borderRadius: 'md',
-        transition: 'all 0.3s ease',
-      },
-      variants: {
-        primary: {
-          bg: 'button.primary',
-          color: 'text._light',
-          _hover: {
-            bg: 'brand.600',
-            transform: 'scale(1.02)',
-          },
-        },
-      },
-    },
+  shadows: {
+    sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    md: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    lg: '0 10px 15px rgba(0, 0, 0, 0.1)',
+    'dark-sm': '0 1px 2px rgba(0, 0, 0, 0.2)',
   },
 });
 

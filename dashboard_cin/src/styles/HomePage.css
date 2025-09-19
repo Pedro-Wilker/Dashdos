@@ -1,0 +1,22 @@
+.home-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-title {
+  margin-bottom: var(--chakra-space-xl);
+  text-align: center;
+  width: 100%;
+}
+
+.home-buttons {
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .home-title {
+    font-size: var(--chakra-fontSizes-xl);
+    margin-bottom: var(--chakra-space-lg);
+  }
+}
