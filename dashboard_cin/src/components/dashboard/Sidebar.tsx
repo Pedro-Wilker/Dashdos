@@ -21,11 +21,37 @@ import {
 } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { UserCircleIcon, Cog6ToothIcon, InboxIcon, PowerIcon } from '@heroicons/react/24/solid';
 import logoClaro from '../../assets/logo_claro.png';
 import logoEscuro from '../../assets/logo_escuro.png';
 import { ChevronRightIcon } from '@chakra-ui/icons';
-import { routes } from '../../routes';
 import './styles/Sidebar.css';
+
+// Define Route interface
+interface Route {
+  path: string;
+  label: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  subItems?: { path: string; label: string }[];
+}
+
+// Define routes array
+const routes: Route[] = [
+  { path: '/', label: 'Home', icon: UserCircleIcon },
+  { path: '/cin', label: 'Dashboard CIN', icon: UserCircleIcon },
+  { path: '/admin', label: 'ADMIN', icon: UserCircleIcon },
+  { path: '/diretoria', label: 'DIRETORIA', icon: Cog6ToothIcon },
+  { path: '/sac', label: 'SAC', icon: InboxIcon },
+  { path: '/carta', label: 'CARTA', icon: InboxIcon },
+  { path: '/articulacao', label: 'ARTICULAÇÃO', icon: InboxIcon },
+  { path: '/nga', label: 'NGA', icon: InboxIcon },
+  { path: '/pontos', label: 'PONTOS', icon: InboxIcon },
+  { path: '/capital', label: 'CAPITAL', icon: InboxIcon },
+  { path: '/interior', label: 'INTERIOR', icon: InboxIcon },
+  { path: '/nud', label: 'NUD', icon: InboxIcon },
+  { path: '/movel', label: 'MÓVEL', icon: InboxIcon },
+  { path: '/logout', label: 'Log Out', icon: PowerIcon },
+];
 
 interface SidebarProps {
   isOpen: boolean;
